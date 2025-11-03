@@ -1,50 +1,125 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report - Constitution v1.0.0
+========================================
+Version Change: Initial → 1.0.0 (INITIAL RELEASE)
+Rationale: First constitution establishing MVP-focused development principles for 3-week timeline
+
+Principles Defined:
+  ✓ I. MVP-First Development (speed over perfection)
+  ✓ II. Clean Code Over Documentation (readable, self-documenting code)
+  ✓ III. Working Software Over Comprehensive Testing (functional tests only)
+
+Modified Sections:
+  ✓ Added: MVP Development Standards
+  ✓ Added: Quality Gates (minimal for speed)
+
+Templates Requiring Updates:
+  ⚠ plan-template.md - Review Constitution Check section
+  ⚠ spec-template.md - Align with MVP-first approach
+  ⚠ tasks-template.md - Ensure MVP task prioritization
+
+Follow-up TODOs:
+  - None (all placeholders filled)
+
+Commit Message: "docs: establish constitution v1.0.0 (MVP-first for 3-week timeline)"
+-->
+
+# KUSMS Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. MVP-First Development
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+**Rule**: Deliver working functionality over perfect implementation. Every feature MUST be independently deployable and demonstrable.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+**Rationale**: With a 3-week timeline, speed is critical. Focus on core user journeys (P1 priority) that deliver immediate value. Defer nice-to-haves (P2+) until MVP is validated.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+**Requirements**:
+- Implement minimum viable scope for each feature
+- Prioritize functional completeness over code elegance
+- Ship features incrementally as they become usable
+- No gold-plating or premature optimization
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### II. Clean Code Over Documentation
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**Rule**: Code MUST be self-documenting through clear naming, simple logic, and minimal abstraction. Heavy documentation is NOT required.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+**Rationale**: Documentation becomes outdated quickly in fast-paced development. Clean, readable code is the best documentation and enables rapid iteration.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+**Requirements**:
+- Use descriptive variable/function names that explain intent
+- Keep functions small and focused (single responsibility)
+- Avoid deep nesting and complex conditionals
+- Comments only for "why" decisions, not "what" the code does
+- No requirement for comprehensive API documentation in MVP phase
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### III. Working Software Over Comprehensive Testing
+
+**Rule**: Focus on functional testing that proves the feature works. Unit tests are OPTIONAL unless explicitly needed.
+
+**Rationale**: For MVP speed, manual testing of user scenarios is acceptable. Automated testing should focus on critical paths and high-risk areas only.
+
+**Requirements**:
+- Every user story MUST be manually testable with clear acceptance criteria
+- Automated tests only for: critical business logic, data persistence, authentication/authorization
+- Integration tests for end-to-end user journeys (P1 priority stories)
+- No test coverage requirements—test what matters for user confidence
+
+## MVP Development Standards
+
+**Scope Management**:
+- Implement P1 (critical) user stories first
+- P2+ stories deferred unless time permits
+- Features must be independently testable and deployable
+- Cut scope aggressively to meet 3-week deadline
+
+**Technical Decisions**:
+- Use proven, familiar technologies (no experimental tools)
+- Leverage existing libraries/frameworks over custom solutions
+- Monolithic architecture acceptable for MVP (microservices deferred)
+- Minimal infrastructure—prefer simple deployment (e.g., single server, managed services)
+
+**Code Organization**:
+- Simple folder structure: `src/`, `tests/`, `docs/`
+- Co-locate related functionality (avoid premature modularization)
+- Refactor only when necessary for next feature
+
+## Quality Gates
+
+**Pre-Implementation**:
+- [ ] Constitution check: Feature aligns with MVP-first principles
+- [ ] User stories prioritized (P1/P2/P3)
+- [ ] Acceptance criteria defined and manually testable
+
+**Pre-Deployment**:
+- [ ] P1 user stories manually tested and working
+- [ ] No critical bugs blocking core functionality
+- [ ] Basic error handling in place (no silent failures)
+
+**NOT Required for MVP**:
+- ❌ Code review approvals (optional but not blocking)
+- ❌ Test coverage thresholds
+- ❌ Performance benchmarks
+- ❌ Comprehensive logging/monitoring
+- ❌ Security audits (basic security practices applied, formal audit deferred)
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+**Amendment Process**:
+- Constitution changes require clear justification tied to project needs
+- Version increments follow semantic versioning:
+  - MAJOR: Principle removal or fundamental philosophy change
+  - MINOR: New principle or section added
+  - PATCH: Clarifications, wording improvements
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Compliance**:
+- This constitution supersedes all other development practices
+- When in conflict between principle and timeline, timeline takes precedence (document the deviation)
+- Post-MVP, revisit constitution to add rigor (testing, documentation, code review)
+
+**Decision Authority**:
+- Project lead has final say on scope cuts and priority decisions
+- Team members empowered to make technical decisions aligned with MVP-first principle
+- Complexity must be justified against 3-week timeline constraint
+
+**Version**: 1.0.0 | **Ratified**: 2025-11-03 | **Last Amended**: 2025-11-03

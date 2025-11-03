@@ -31,7 +31,22 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+**MVP-First Validation** (per Constitution v1.0.0):
+- [ ] Feature delivers clear user value (P1 priority justified)
+- [ ] Scope is minimal viable implementation (no gold-plating)
+- [ ] User stories are independently testable
+- [ ] Implementation can complete within timeline constraints
+- [ ] Uses proven technologies (no experimental tools)
+
+**Pre-Deployment Gates**:
+- [ ] P1 user stories manually tested and working
+- [ ] No critical bugs blocking core functionality  
+- [ ] Basic error handling in place
+
+**NOT Required for MVP**:
+- ❌ Test coverage thresholds
+- ❌ Performance benchmarks
+- ❌ Comprehensive documentation
 
 ## Project Structure
 

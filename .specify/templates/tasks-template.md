@@ -8,7 +8,11 @@ description: "Task list template for feature implementation"
 **Input**: Design documents from `/specs/[###-feature-name]/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
-**Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
+**MVP-First Task Planning** (per Constitution v1.0.0):
+- Focus on P1 user stories ONLY for initial implementation
+- Tests are OPTIONAL—include only for critical business logic or when explicitly required
+- Manual testing of acceptance scenarios is acceptable
+- Defer P2+ stories unless P1 scope completes early
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 

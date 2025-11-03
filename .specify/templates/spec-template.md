@@ -8,15 +8,22 @@
 ## User Scenarios & Testing *(mandatory)*
 
 <!--
-  IMPORTANT: User stories should be PRIORITIZED as user journeys ordered by importance.
-  Each user story/journey must be INDEPENDENTLY TESTABLE - meaning if you implement just ONE of them,
-  you should still have a viable MVP (Minimum Viable Product) that delivers value.
+  MVP-FIRST PRIORITIZATION (per Constitution v1.0.0):
   
-  Assign priorities (P1, P2, P3, etc.) to each story, where P1 is the most critical.
-  Think of each story as a standalone slice of functionality that can be:
-  - Developed independently
-  - Tested independently
-  - Deployed independently
+  User stories MUST be PRIORITIZED as user journeys ordered by importance for MVP delivery.
+  Each story must be INDEPENDENTLY TESTABLE and deliverable as a working increment.
+  
+  Priority Guidelines:
+  - P1 (Critical): MUST have for MVP - core value proposition, blocks other stories
+  - P2 (Important): Should have but deferrable if timeline pressured
+  - P3 (Nice-to-have): Post-MVP enhancements
+  
+  For 3-week timeline: Focus on P1 stories ONLY. Implement minimum viable scope.
+  
+  Each story should be:
+  - Developed independently (can be implemented alone)
+  - Tested independently (manual testing acceptable per Constitution)
+  - Deployed independently (delivers user value standalone)
   - Demonstrated to users independently
 -->
 
