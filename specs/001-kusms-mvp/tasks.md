@@ -86,11 +86,11 @@ description: "Task list for KUSMS MVP implementation"
 
 - [X] T019 Install React Router v6 in frontend: `npm install react-router-dom`
 - [X] T020 Install UI library (Material-UI) in frontend: `npm install @mui/material @emotion/react @emotion/styled`
-- [ ] T021 Create frontend/src/App.jsx with React Router setup and placeholder routes
-- [ ] T022 [P] Create frontend/src/components/common/Layout.jsx with header, sidebar, main content area
-- [ ] T023 [P] Create frontend/src/components/common/Button.jsx reusable button component
-- [ ] T024 [P] Create frontend/src/components/common/Input.jsx reusable input component
-- [ ] T025 [P] Create frontend/src/components/common/Modal.jsx reusable modal component
+- [X] T021 Create frontend/src/App.jsx with React Router setup and placeholder routes
+- [X] T022 [P] Create frontend/src/components/common/Layout.jsx with header, sidebar, main content area
+- [X] T023 [P] Create frontend/src/components/common/Button.jsx reusable button component
+- [X] T024 [P] Create frontend/src/components/common/Input.jsx reusable input component
+- [X] T025 [P] Create frontend/src/components/common/Modal.jsx reusable modal component
 - [X] T026 Create frontend/src/services/api.js with Axios instance and base API client configuration
 
 ### Documentation

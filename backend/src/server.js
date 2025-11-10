@@ -27,7 +27,11 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API routes will be added here
+// API routes
+import authRoutes from './routes/auth.js';
+
+app.use('/api/auth', authRoutes);
+
 app.get('/api', (req, res) => {
   res.json({
     message: 'Welcome to KUSMS API',
