@@ -57,46 +57,46 @@ description: "Task list for KUSMS MVP implementation"
 
 ### Infrastructure Setup
 
-- [ ] T001 Create root project directory structure (frontend/, backend/, docs/)
-- [ ] T002 [P] Initialize frontend React app in frontend/ with Vite or Create React App
-- [ ] T003 [P] Initialize backend Node.js project in backend/ with Express
-- [ ] T004 [P] Create docker-compose.yml for PostgreSQL, backend, frontend services
-- [ ] T005 [P] Create .env.example files for frontend and backend with required variables
-- [ ] T006 Configure ESLint and Prettier for frontend in frontend/.eslintrc.js
-- [ ] T007 Configure ESLint and Prettier for backend in backend/.eslintrc.js
-- [ ] T008 Create .gitignore for node_modules, .env, build directories
+- [X] T001 Create root project directory structure (frontend/, backend/, docs/)
+- [X] T002 [P] Initialize frontend React app in frontend/ with Vite or Create React App
+- [X] T003 [P] Initialize backend Node.js project in backend/ with Express
+- [X] T004 [P] Create docker-compose.yml for PostgreSQL, backend, frontend services
+- [X] T005 [P] Create .env.example files for frontend and backend with required variables
+- [X] T006 Configure ESLint and Prettier for frontend in frontend/.eslintrc.js
+- [X] T007 Configure ESLint and Prettier for backend in backend/.eslintrc.js
+- [X] T008 Create .gitignore for node_modules, .env, build directories
 
 ### Database Setup
 
-- [ ] T009 Install Prisma CLI and initialize Prisma in backend/prisma/
-- [ ] T010 Define Prisma schema in backend/prisma/schema.prisma with User, Role enum, Facility, Booking, BookingStatus enum, Event, EventStatus enum, MaintenanceRequest, MaintenanceStatus enum
-- [ ] T011 Run initial Prisma migration: `npx prisma migrate dev --name init`
-- [ ] T012 Generate Prisma Client: `npx prisma generate`
-- [ ] T013 [P] Create seed script in backend/prisma/seed.js with sample users (student, faculty, admin, maintenance), facilities (5-10 rooms), and test data
-- [ ] T014 Run seed script: `npx prisma db seed`
+- [X] T009 Install Prisma CLI and initialize Prisma in backend/prisma/
+- [X] T010 Define Prisma schema in backend/prisma/schema.prisma with User, Role enum, Facility, Booking, BookingStatus enum, Event, EventStatus enum, MaintenanceRequest, MaintenanceStatus enum
+- [ ] T011 Run initial Prisma migration: `npx prisma migrate dev --name init` (⚠️ Requires PostgreSQL running)
+- [X] T012 Generate Prisma Client: `npx prisma generate`
+- [X] T013 [P] Create seed script in backend/prisma/seed.js with sample users (student, faculty, admin, maintenance), facilities (5-10 rooms), and test data
+- [ ] T014 Run seed script: `npx prisma db seed` (⚠️ Requires database migration first)
 
 ### Backend Foundation
 
-- [ ] T015 Create backend/src/server.js with Express app initialization, middleware (cors, json, morgan), and basic health check endpoint
-- [ ] T016 Create backend/src/utils/prisma.js for Prisma client singleton instance
-- [ ] T017 [P] Create backend/src/utils/logger.js for consistent logging
-- [ ] T018 [P] Create backend/src/utils/errors.js for custom error classes (ValidationError, AuthError, NotFoundError)
+- [X] T015 Create backend/src/server.js with Express app initialization, middleware (cors, json, morgan), and basic health check endpoint
+- [X] T016 Create backend/src/utils/prisma.js for Prisma client singleton instance
+- [X] T017 [P] Create backend/src/utils/logger.js for consistent logging
+- [X] T018 [P] Create backend/src/utils/errors.js for custom error classes (ValidationError, AuthError, NotFoundError)
 
 ### Frontend Foundation
 
-- [ ] T019 Install React Router v6 in frontend: `npm install react-router-dom`
-- [ ] T020 Install UI library (Material-UI) in frontend: `npm install @mui/material @emotion/react @emotion/styled`
+- [X] T019 Install React Router v6 in frontend: `npm install react-router-dom`
+- [X] T020 Install UI library (Material-UI) in frontend: `npm install @mui/material @emotion/react @emotion/styled`
 - [ ] T021 Create frontend/src/App.jsx with React Router setup and placeholder routes
 - [ ] T022 [P] Create frontend/src/components/common/Layout.jsx with header, sidebar, main content area
 - [ ] T023 [P] Create frontend/src/components/common/Button.jsx reusable button component
 - [ ] T024 [P] Create frontend/src/components/common/Input.jsx reusable input component
 - [ ] T025 [P] Create frontend/src/components/common/Modal.jsx reusable modal component
-- [ ] T026 Create frontend/src/services/api.js with Axios instance and base API client configuration
+- [X] T026 Create frontend/src/services/api.js with Axios instance and base API client configuration
 
 ### Documentation
 
-- [ ] T027 [P] Create docs/README.md with setup instructions (Node.js 18, Docker, prerequisites)
-- [ ] T028 [P] Create docs/API.md placeholder for API endpoint documentation
+- [X] T027 [P] Create docs/README.md with setup instructions (Node.js 18, Docker, prerequisites)
+- [X] T028 [P] Create docs/API.md placeholder for API endpoint documentation
 
 **Milestone 1**: Development environment ready, database running, basic apps scaffolded
 

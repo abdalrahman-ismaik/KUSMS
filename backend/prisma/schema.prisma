@@ -1,0 +1,147 @@
+// Prisma Schema for KU Smart Management System (KUSMS)
+// Database: PostgreSQL 15
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum Role {
+  STUDENT
+  FACULTY
+  ADMIN
+  MAINTENANCE
+}
+
+enum BookingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum EventStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  PUBLISHED
+  REJECTED
+}
+
+enum MaintenanceStatus {
+  PENDING
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+}
+
+// Models
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  role      Role     @default(STUDENT)
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  bookings            Booking[]
+  events              Event[]
+  maintenanceRequests MaintenanceRequest[] @relation("RequestCreator")
+  assignedRequests    MaintenanceRequest[] @relation("MaintenanceAssignee")
+
+  @@index([email])
+  @@index([role])
+}
+
+model Facility {
+  id          String   @id @default(uuid())
+  name        String
+  type        String // e.g., "Classroom", "Lab", "Sports"
+  capacity    Int
+  location    String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  bookings            Booking[]
+  events              Event[]
+  maintenanceRequests MaintenanceRequest[]
+
+  @@index([type])
+  @@index([name])
+}
+
+model Booking {
+  id         String        @id @default(uuid())
+  userId     String
+  facilityId String
+  startTime  DateTime
+  endTime    DateTime
+  purpose    String
+  status     BookingStatus @default(PENDING)
+  adminNotes String?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  // Relations
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  facility Facility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([facilityId])
+  @@index([startTime])
+  @@index([status])
+  @@index([facilityId, startTime])
+}
+
+model Event {
+  id          String      @id @default(uuid())
+  title       String
+  description String?
+  startTime   DateTime
+  endTime     DateTime
+  location    String?
+  facilityId  String?
+  creatorId   String
+  status      EventStatus @default(DRAFT)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  creator  User      @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  facility Facility? @relation(fields: [facilityId], references: [id], onDelete: SetNull)
+
+  @@index([creatorId])
+  @@index([startTime])
+  @@index([status])
+  @@index([facilityId])
+}
+
+model MaintenanceRequest {
+  id          String            @id @default(uuid())
+  userId      String
+  facilityId  String
+  description String
+  status      MaintenanceStatus @default(PENDING)
+  assignedTo  String?
+  completedAt DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  // Relations
+  user           User     @relation("RequestCreator", fields: [userId], references: [id], onDelete: Cascade)
+  facility       Facility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  assignedStaff  User?    @relation("MaintenanceAssignee", fields: [assignedTo], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([facilityId])
+  @@index([assignedTo])
+  @@index([status])
+}
