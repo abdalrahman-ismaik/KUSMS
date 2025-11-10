@@ -29,8 +29,12 @@ app.get('/health', (req, res) => {
 
 // API routes
 import authRoutes from './routes/auth.js';
+import bookingRoutes from './routes/bookings.js';
+import facilityRoutes from './routes/facilities.js';
 
 app.use('/api/auth', authRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/facilities', facilityRoutes);
 
 app.get('/api', (req, res) => {
   res.json({

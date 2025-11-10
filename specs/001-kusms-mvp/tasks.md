@@ -154,37 +154,37 @@ description: "Task list for KUSMS MVP implementation"
 
 ### Backend - Booking Module
 
-- [ ] T051 [US1] Create backend/src/controllers/bookingController.js with createBooking, getBookings, getBookingById, approveBooking, rejectBooking functions
-- [ ] T052 [US1] Create backend/src/controllers/facilityController.js with getFacilities, getFacilityById, checkAvailability functions
-- [ ] T053 [US1] Implement conflict detection logic in backend/src/utils/bookingConflicts.js (check overlapping time slots)
-- [ ] T054 [US1] Implement alternative slot suggestion in backend/src/utils/bookingConflicts.js (find next 3 available slots)
-- [ ] T055 [US1] Create backend/src/routes/bookings.js with GET /api/bookings, POST /api/bookings, GET /api/bookings/:id, PATCH /api/bookings/:id/approve, PATCH /api/bookings/:id/reject endpoints
-- [ ] T056 [US1] Create backend/src/routes/facilities.js with GET /api/facilities, GET /api/facilities/:id, GET /api/facilities/:id/availability endpoints
-- [ ] T057 [US1] Apply auth and RBAC middleware to booking routes (students/faculty can create, admins can approve/reject)
-- [ ] T058 [US1] Register booking and facility routes in backend/src/server.js
+- [x] T051 [US1] Create backend/src/controllers/bookingController.js with createBooking, getBookings, getBookingById, approveBooking, rejectBooking functions
+- [x] T052 [US1] Create backend/src/controllers/facilityController.js with getFacilities, getFacilityById, checkAvailability functions
+- [x] T053 [US1] Implement conflict detection logic in backend/src/utils/bookingConflicts.js (check overlapping time slots)
+- [x] T054 [US1] Implement alternative slot suggestion in backend/src/utils/bookingConflicts.js (find next 3 available slots)
+- [x] T055 [US1] Create backend/src/routes/bookings.js with GET /api/bookings, POST /api/bookings, GET /api/bookings/:id, PATCH /api/bookings/:id/approve, PATCH /api/bookings/:id/reject endpoints
+- [x] T056 [US1] Create backend/src/routes/facilities.js with GET /api/facilities, GET /api/facilities/:id, GET /api/facilities/:id/availability endpoints
+- [x] T057 [US1] Apply auth and RBAC middleware to booking routes (students/faculty can create, admins can approve/reject)
+- [x] T058 [US1] Register booking and facility routes in backend/src/server.js
 
 ### Backend - Notifications (Basic)
 
-- [ ] T059 [US1] Create backend/src/utils/notifications.js with sendBookingNotification function (console log for MVP, email later)
-- [ ] T060 [US1] Integrate notifications in bookingController for approval/rejection events
+- [x] T059 [US1] Create backend/src/utils/notifications.js with sendBookingNotification function (console log for MVP, email later)
+- [x] T060 [US1] Integrate notifications in bookingController for approval/rejection events
 
 ### Frontend - Booking UI
 
-- [ ] T061 [P] [US1] Create frontend/src/services/bookingService.js with API calls (createBooking, getBookings, approveBooking, rejectBooking)
-- [ ] T062 [P] [US1] Create frontend/src/services/facilityService.js with API calls (getFacilities, checkAvailability)
-- [ ] T063 [US1] Create frontend/src/pages/BookingPage.jsx with facility selection, date/time pickers, conflict detection display
-- [ ] T064 [US1] Create frontend/src/components/booking/BookingForm.jsx reusable form component
-- [ ] T065 [US1] Create frontend/src/components/booking/BookingList.jsx to display user's bookings with status
-- [ ] T066 [US1] Create frontend/src/components/booking/ConflictAlert.jsx to show conflicts and alternative slots
-- [ ] T067 [US1] Install date picker library: `npm install @mui/x-date-pickers dayjs`
-- [ ] T068 [US1] Implement date/time picker in BookingForm with conflict checking on selection
+- [x] T061 [P] [US1] Create frontend/src/services/bookingService.ts with API calls (createBooking, getBookings, approveBooking, rejectBooking)
+- [x] T062 [P] [US1] Create frontend/src/services/facilityService.ts with API calls (getFacilities, checkAvailability)
+- [x] T063 [US1] Create frontend/src/pages/BookingPage.tsx with facility selection, date/time pickers, conflict detection display
+- [x] T064 [US1] Create frontend/src/components/booking/BookingForm.tsx reusable form component
+- [x] T065 [US1] Create frontend/src/components/booking/BookingList.tsx to display user's bookings with status
+- [x] T066 [US1] Create frontend/src/components/booking/ConflictAlert.tsx to show conflicts and alternative slots
+- [x] T067 [US1] Install date picker library: `npm install @mui/x-date-pickers dayjs`
+- [x] T068 [US1] Implement date/time picker in BookingForm with conflict checking on selection
 
 ### Frontend - Admin Approval
 
-- [ ] T069 [P] [US1] Create frontend/src/pages/AdminPage.jsx with tabs for pending bookings, events, users
-- [ ] T070 [US1] Create frontend/src/components/booking/PendingBookingsList.jsx to display all pending booking requests
-- [ ] T071 [US1] Create frontend/src/components/booking/BookingApprovalModal.jsx with approve/reject actions and reason input
-- [ ] T072 [US1] Integrate approval/rejection actions in AdminPage with real-time list update
+- [x] T069 [P] [US1] Create frontend/src/pages/AdminPage.tsx with tabs for pending bookings, events, users
+- [x] T070 [US1] Create frontend/src/components/booking/PendingBookingsList.tsx to display all pending booking requests
+- [x] T071 [US1] Create frontend/src/components/booking/BookingApprovalModal.tsx with approve/reject actions and reason input
+- [x] T072 [US1] Integrate approval/rejection actions in AdminPage with real-time list update
 
 ### Integration & Testing
 

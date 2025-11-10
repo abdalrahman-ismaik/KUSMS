@@ -3,11 +3,12 @@ import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import BookingPage from './pages/BookingPage';
+import AdminPage from './pages/AdminPage';
 import './App.css';
 
 // Placeholder pages (will be created next)
-const DashboardPage = () => <div style={{ padding: '2rem' }}><h1>Dashboard</h1><p>Coming soon...</p></div>;
-const BookingPage = () => <div style={{ padding: '2rem' }}><h1>Facility Booking</h1><p>Coming soon...</p></div>;
 const EventsPage = () => <div style={{ padding: '2rem' }}><h1>Events Calendar</h1><p>Coming soon...</p></div>;
 const MaintenancePage = () => <div style={{ padding: '2rem' }}><h1>Maintenance Requests</h1><p>Coming soon...</p></div>;
 
@@ -36,7 +37,7 @@ function App() {
               path="/dashboard"
               element={
                 <ProtectedRoute>
-                  <DashboardPage />
+                  <Dashboard />
                 </ProtectedRoute>
               }
             />
@@ -61,6 +62,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <MaintenancePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/approvals"
+              element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <AdminPage />
                 </ProtectedRoute>
               }
             />
