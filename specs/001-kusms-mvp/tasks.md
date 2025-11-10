@@ -129,17 +129,17 @@ description: "Task list for KUSMS MVP implementation"
 
 ### Role-Based Dashboards
 
-- [ ] T043 [P] Create frontend/src/pages/Dashboard.jsx with role detection and conditional rendering
-- [ ] T044 [P] Create frontend/src/components/dashboard/StudentDashboard.jsx with bookings, events sections
-- [ ] T045 [P] Create frontend/src/components/dashboard/FacultyDashboard.jsx similar to student dashboard
-- [ ] T046 [P] Create frontend/src/components/dashboard/AdminDashboard.jsx with approval workflows, analytics
-- [ ] T047 [P] Create frontend/src/components/dashboard/MaintenanceDashboard.jsx with assigned tasks list
+- [x] T043 [P] Create frontend/src/pages/Dashboard.tsx with role detection and conditional rendering
+- [x] T044 [P] Create frontend/src/components/dashboard/StudentDashboard.tsx with bookings, events sections
+- [x] T045 [P] Create frontend/src/components/dashboard/FacultyDashboard.tsx similar to student dashboard
+- [x] T046 [P] Create frontend/src/components/dashboard/AdminDashboard.tsx with approval workflows, analytics
+- [x] T047 [P] Create frontend/src/components/dashboard/MaintenanceDashboard.tsx with assigned tasks list
 
 ### Global Navigation
 
-- [ ] T048 Create frontend/src/components/common/Header.jsx with user info, logout button, role indicator
-- [ ] T049 Create frontend/src/components/common/Sidebar.jsx with navigation links based on user role
-- [ ] T050 Implement logout functionality in frontend and backend (token invalidation)
+- [x] T048 Update frontend/src/components/common/Layout.tsx Header with user info, logout button, role indicator
+- [x] T049 Update frontend/src/components/common/Layout.tsx Sidebar with navigation links based on user role
+- [x] T050 Implement logout functionality in frontend and backend (token invalidation)
 
 **Milestone 2**: Users can log in, see role-specific dashboards, navigate protected routes
 

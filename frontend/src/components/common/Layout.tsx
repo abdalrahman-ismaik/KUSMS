@@ -1,12 +1,16 @@
-import { Box, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton } from '@mui/material';
+import { Box, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, Avatar, Menu, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import EventIcon from '@mui/icons-material/Event';
 import BookIcon from '@mui/icons-material/Book';
 import BuildIcon from '@mui/icons-material/Build';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PersonIcon from '@mui/icons-material/Person';
+import PeopleIcon from '@mui/icons-material/People';
+import DomainIcon from '@mui/icons-material/Domain';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 const drawerWidth = 240;
 
@@ -16,18 +20,46 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const menuItems = [
-    { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-    { text: 'Bookings', icon: <BookIcon />, path: '/bookings' },
-    { text: 'Events', icon: <EventIcon />, path: '/events' },
-    { text: 'Maintenance', icon: <BuildIcon />, path: '/maintenance' },
+  const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleUserMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    handleUserMenuClose();
+    logout();
+    navigate('/login');
+  };
+
+  // Base menu items available to all users
+  const baseMenuItems = [
+    { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard', roles: ['STUDENT', 'FACULTY', 'ADMIN', 'MAINTENANCE'] },
+    { text: 'Bookings', icon: <BookIcon />, path: '/bookings', roles: ['STUDENT', 'FACULTY', 'ADMIN'] },
+    { text: 'Events', icon: <EventIcon />, path: '/events', roles: ['STUDENT', 'FACULTY', 'ADMIN'] },
+    { text: 'Maintenance', icon: <BuildIcon />, path: '/maintenance', roles: ['STUDENT', 'FACULTY', 'ADMIN', 'MAINTENANCE'] },
   ];
+
+  // Admin-only menu items
+  const adminMenuItems = [
+    { text: 'Users', icon: <PeopleIcon />, path: '/users', roles: ['ADMIN'] },
+    { text: 'Facilities', icon: <DomainIcon />, path: '/facilities', roles: ['ADMIN'] },
+  ];
+
+  // Filter menu items based on user role
+  const menuItems = user
+    ? [...baseMenuItems, ...adminMenuItems].filter(item => item.roles.includes(user.role))
+    : baseMenuItems;
 
   const drawer = (
     <div>
@@ -46,7 +78,7 @@ export default function Layout({ children }: LayoutProps) {
           </ListItem>
         ))}
         <ListItem disablePadding>
-          <ListItemButton onClick={() => navigate('/login')}>
+          <ListItemButton onClick={handleLogout}>
             <ListItemIcon><LogoutIcon /></ListItemIcon>
             <ListItemText primary="Logout" />
           </ListItemButton>
@@ -75,9 +107,45 @@ export default function Layout({ children }: LayoutProps) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             KU Smart Management System
           </Typography>
+          
+          {/* User Menu */}
+          {user && (
+            <>
+              <IconButton onClick={handleUserMenuOpen} sx={{ ml: 2 }}>
+                <Avatar sx={{ bgcolor: 'secondary.main' }}>
+                  {user.name.charAt(0).toUpperCase()}
+                </Avatar>
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleUserMenuClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+              >
+                <MenuItem disabled>
+                  <Box>
+                    <Typography variant="body1">{user.name}</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {user.email}
+                    </Typography>
+                    <Typography variant="caption" display="block" color="primary">
+                      {user.role}
+                    </Typography>
+                  </Box>
+                </MenuItem>
+                <MenuItem onClick={() => { handleUserMenuClose(); navigate('/profile'); }}>
+                  <PersonIcon sx={{ mr: 1 }} /> Profile
+                </MenuItem>
+                <MenuItem onClick={handleLogout}>
+                  <LogoutIcon sx={{ mr: 1 }} /> Logout
+                </MenuItem>
+              </Menu>
+            </>
+          )}
         </Toolbar>
       </AppBar>
 
