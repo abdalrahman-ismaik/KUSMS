@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import * as facilityController from '../controllers/facilityController.js';
+import { verifyAuth } from '../middleware/auth.js';
+import { requireAdmin } from '../middleware/rbac.js';
+
 const router = express.Router();
-const facilityController = require('../controllers/facilityController');
-const { verifyAuth } = require('../middleware/auth');
-const { requireAdmin } = require('../middleware/rbac');
 
 // Public routes (all authenticated users)
 router.get('/', verifyAuth, facilityController.getFacilities);
@@ -14,4 +15,4 @@ router.post('/', verifyAuth, requireAdmin, facilityController.createFacility);
 router.patch('/:id', verifyAuth, requireAdmin, facilityController.updateFacility);
 router.delete('/:id', verifyAuth, requireAdmin, facilityController.deleteFacility);
 
-module.exports = router;
+export default router;

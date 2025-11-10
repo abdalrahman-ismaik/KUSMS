@@ -1,6 +1,6 @@
-const prisma = require('../utils/prisma');
-const { NotFoundError } = require('../utils/errors');
-const { getBookingsForDate } = require('../utils/bookingConflicts');
+import prisma from '../utils/prisma.js';
+import { NotFoundError } from '../utils/errors.js';
+import { getBookingsForDate } from '../utils/bookingConflicts.js';
 
 /**
  * Get all facilities
@@ -222,7 +222,7 @@ async function deleteFacility(req, res, next) {
   }
 }
 
-module.exports = {
+export {
   getFacilities,
   getFacilityById,
   checkAvailability,

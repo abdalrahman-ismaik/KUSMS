@@ -1,4 +1,4 @@
-const logger = require('./logger');
+import logger from './logger.js';
 
 /**
  * Send booking notification to user
@@ -175,7 +175,7 @@ function getEventMessage(event, type, reason) {
   }
 }
 
-module.exports = {
+export {
   sendBookingNotification,
   sendMaintenanceNotification,
   sendEventNotification,

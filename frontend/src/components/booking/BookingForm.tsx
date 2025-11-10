@@ -17,8 +17,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import Button from '../common/Button';
-import facilityService, { Facility } from '../../services/facilityService';
-import bookingService, { CreateBookingData } from '../../services/bookingService';
+import facilityService from '../../services/facilityService';
+import type { Facility } from '../../services/facilityService';
+import bookingService from '../../services/bookingService';
+import type { CreateBookingData } from '../../services/bookingService';
 import ConflictAlert from './ConflictAlert';
 
 interface AlternativeSlot {

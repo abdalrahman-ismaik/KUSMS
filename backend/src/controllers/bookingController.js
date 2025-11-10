@@ -1,7 +1,7 @@
-const prisma = require('../utils/prisma');
-const { ValidationError, NotFoundError, ConflictError } = require('../utils/errors');
-const { hasConflict, findAlternativeSlots } = require('../utils/bookingConflicts');
-const { sendBookingNotification } = require('../utils/notifications');
+import prisma from '../utils/prisma.js';
+import { ValidationError, NotFoundError, ConflictError } from '../utils/errors.js';
+import { hasConflict, findAlternativeSlots } from '../utils/bookingConflicts.js';
+import { sendBookingNotification } from '../utils/notifications.js';
 
 /**
  * Create a new booking
@@ -317,7 +317,7 @@ async function cancelBooking(req, res, next) {
   }
 }
 
-module.exports = {
+export {
   createBooking,
   getBookings,
   getBookingById,

@@ -1,4 +1,4 @@
-const prisma = require('./prisma');
+import prisma from './prisma.js';
 
 /**
  * Check if a booking conflicts with existing approved bookings
@@ -135,7 +135,7 @@ async function getBookingsForDate(facilityId, date) {
   });
 }
 
-module.exports = {
+export {
   hasConflict,
   findAlternativeSlots,
   getBookingsForDate,

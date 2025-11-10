@@ -1,4 +1,5 @@
-import { Button as MuiButton, ButtonProps, CircularProgress } from '@mui/material';
+import { Button as MuiButton, CircularProgress } from '@mui/material';
+import type { ButtonProps } from '@mui/material';
 
 interface CustomButtonProps extends ButtonProps {
   loading?: boolean;

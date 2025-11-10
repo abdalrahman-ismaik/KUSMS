@@ -5,7 +5,7 @@ export const authService = {
    * Login with email and password
    */
   async login(email: string, password: string) {
-    const response = await api.post('/api/auth/login', { email, password });
+    const response = await api.post('/auth/login', { email, password });
     return response.data;
   },
 
@@ -13,7 +13,7 @@ export const authService = {
    * Logout current user
    */
   async logout() {
-    const response = await api.post('/api/auth/logout');
+    const response = await api.post('/auth/logout');
     return response.data;
   },
 
@@ -21,7 +21,7 @@ export const authService = {
    * Get current authenticated user
    */
   async getCurrentUser() {
-    const response = await api.get('/api/auth/me');
+    const response = await api.get('/auth/me');
     return response.data;
   },
 };

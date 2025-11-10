@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import * as bookingController from '../controllers/bookingController.js';
+import { verifyAuth } from '../middleware/auth.js';
+import { requireAdmin } from '../middleware/rbac.js';
+
 const router = express.Router();
-const bookingController = require('../controllers/bookingController');
-const { verifyAuth } = require('../middleware/auth');
-const { requireAdmin } = require('../middleware/rbac');
 
 // All booking routes require authentication
 router.use(verifyAuth);
@@ -25,4 +26,4 @@ router.patch('/:id/reject', requireAdmin, bookingController.rejectBooking);
 // Cancel a booking (User or Admin)
 router.patch('/:id/cancel', bookingController.cancelBooking);
 
-module.exports = router;
+export default router;
