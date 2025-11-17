@@ -1,5 +1,4 @@
-import { Box, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, Avatar, Menu, MenuItem } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import { Box, AppBar, Toolbar, Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, Avatar, Menu, MenuItem, Chip, Divider, Badge } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import EventIcon from '@mui/icons-material/Event';
 import BookIcon from '@mui/icons-material/Book';
@@ -8,25 +7,23 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 import PeopleIcon from '@mui/icons-material/People';
 import DomainIcon from '@mui/icons-material/Domain';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
-const drawerWidth = 240;
+const SIDEBAR_WIDTH = 280;
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps) {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, logout } = useAuth();
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
 
   const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -61,137 +58,354 @@ export default function Layout({ children }: LayoutProps) {
     ? [...baseMenuItems, ...adminMenuItems].filter(item => item.roles.includes(user.role))
     : baseMenuItems;
 
-  const drawer = (
-    <div>
-      <Toolbar>
-        <Typography variant="h6" noWrap component="div">
-          KUSMS
+  const getRoleColor = (role: string) => {
+    switch (role) {
+      case 'ADMIN': return 'error';
+      case 'FACULTY': return 'primary';
+      case 'MAINTENANCE': return 'warning';
+      default: return 'secondary';
+    }
+  };
+
+  const sidebarContent = (
+    <Box sx={{ 
+      height: '100vh', 
+      display: 'flex', 
+      flexDirection: 'column',
+      bgcolor: '#1e293b',
+      borderRight: '1px solid #334155',
+      position: 'fixed',
+      width: SIDEBAR_WIDTH,
+      top: 0,
+      left: 0,
+      zIndex: 1200
+    }}>
+      {/* Sidebar Header */}
+      <Box sx={{ 
+        p: 3,
+        py: 4,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 2,
+        borderBottom: '1px solid #334155'
+      }}>
+        <Box sx={{
+          width: 44,
+          height: 44,
+          borderRadius: '12px',
+          background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)'
+        }}>
+          <DomainIcon sx={{ fontSize: 26, color: 'white' }} />
+        </Box>
+        <Box>
+          <Typography variant="h5" sx={{ 
+            color: 'white', 
+            fontWeight: 700,
+            fontSize: '1.35rem',
+            lineHeight: 1.2,
+            letterSpacing: '-0.01em'
+          }}>
+            KUSMS
+          </Typography>
+          <Typography variant="caption" sx={{ 
+            color: 'text.secondary',
+            fontSize: '0.75rem',
+            display: 'block',
+            mt: 0.25
+          }}>
+            Smart Management
+          </Typography>
+        </Box>
+      </Box>
+
+      {/* Navigation Menu */}
+      <Box sx={{ flex: 1, overflowY: 'auto', py: 3 }}>
+        <Typography variant="overline" sx={{ 
+          px: 3,
+          color: 'text.secondary',
+          fontSize: '0.7rem',
+          fontWeight: 700,
+          letterSpacing: '0.08em',
+          display: 'block',
+          mb: 1.5
+        }}>
+          MAIN MENU
         </Typography>
-      </Toolbar>
-      <List>
-        {menuItems.map((item) => (
-          <ListItem key={item.text} disablePadding>
-            <ListItemButton onClick={() => navigate(item.path)}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
+        <List sx={{ px: 2 }}>
+          {menuItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <ListItem key={item.text} disablePadding sx={{ mb: 0.75 }}>
+                <ListItemButton 
+                  onClick={() => navigate(item.path)}
+                  sx={{
+                    borderRadius: '10px',
+                    py: 1.25,
+                    px: 2,
+                    bgcolor: isActive ? 'rgba(99, 102, 241, 0.12)' : 'transparent',
+                    border: isActive ? '1px solid rgba(99, 102, 241, 0.3)' : '1px solid transparent',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      bgcolor: isActive ? 'rgba(99, 102, 241, 0.15)' : 'rgba(99, 102, 241, 0.05)',
+                      transform: 'translateX(2px)'
+                    },
+                  }}
+                >
+                  <ListItemIcon sx={{ 
+                    color: isActive ? 'primary.main' : 'text.secondary',
+                    minWidth: 36,
+                    '& svg': {
+                      fontSize: '1.35rem'
+                    }
+                  }}>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary={item.text} 
+                    primaryTypographyProps={{
+                      fontSize: '0.9375rem',
+                      fontWeight: isActive ? 600 : 500,
+                      color: isActive ? 'primary.main' : 'text.primary',
+                      lineHeight: 1.4
+                    }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
+        </List>
+      </Box>
+
+      {/* User Info Card */}
+      {user && (
+        <Box sx={{ 
+          p: 3,
+          pt: 2,
+          borderTop: '1px solid #334155'
+        }}>
+          <Box sx={{ 
+            p: 2.5,
+            bgcolor: '#0f172a',
+            borderRadius: '12px',
+            border: '1px solid #334155'
+          }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1.5 }}>
+              <Avatar sx={{ 
+                width: 42,
+                height: 42,
+                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                fontSize: '1.1rem',
+                fontWeight: 600
+              }}>
+                {user.name.charAt(0).toUpperCase()}
+              </Avatar>
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <Typography variant="body2" sx={{ 
+                  fontWeight: 600,
+                  mb: 0.5,
+                  fontSize: '0.9rem',
+                  lineHeight: 1.3,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
+                }}>
+                  {user.name}
+                </Typography>
+                <Chip 
+                  label={user.role} 
+                  size="small" 
+                  color={getRoleColor(user.role)}
+                  sx={{ 
+                    height: 22,
+                    fontSize: '0.7rem',
+                    fontWeight: 600,
+                    '& .MuiChip-label': {
+                      px: 1.5
+                    }
+                  }}
+                />
+              </Box>
+            </Box>
+            <Typography variant="caption" sx={{ 
+              color: 'text.secondary',
+              display: 'block',
+              fontSize: '0.75rem',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
+            }}>
+              {user.email}
+            </Typography>
+            <Divider sx={{ my: 1.5 }} />
+            <ListItemButton 
+              onClick={handleLogout}
+              sx={{
+                borderRadius: '8px',
+                py: 1,
+                px: 1.5,
+                color: 'error.main',
+                '&:hover': {
+                  bgcolor: 'rgba(239, 68, 68, 0.1)',
+                },
+              }}
+            >
+              <ListItemIcon sx={{ color: 'error.main', minWidth: 32 }}>
+                <LogoutIcon sx={{ fontSize: '1.2rem' }} />
+              </ListItemIcon>
+              <ListItemText 
+                primary="Sign Out" 
+                primaryTypographyProps={{
+                  fontSize: '0.875rem',
+                  fontWeight: 600
+                }}
+              />
             </ListItemButton>
-          </ListItem>
-        ))}
-        <ListItem disablePadding>
-          <ListItemButton onClick={handleLogout}>
-            <ListItemIcon><LogoutIcon /></ListItemIcon>
-            <ListItemText primary="Logout" />
-          </ListItemButton>
-        </ListItem>
-      </List>
-    </div>
+          </Box>
+        </Box>
+      )}
+    </Box>
   );
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      {/* App Bar */}
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            KU Smart Management System
-          </Typography>
-          
-          {/* User Menu */}
-          {user && (
-            <>
-              <IconButton onClick={handleUserMenuOpen} sx={{ ml: 2 }}>
-                <Avatar sx={{ bgcolor: 'secondary.main' }}>
-                  {user.name.charAt(0).toUpperCase()}
-                </Avatar>
-              </IconButton>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleUserMenuClose}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-              >
-                <MenuItem disabled>
-                  <Box>
-                    <Typography variant="body1">{user.name}</Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {user.email}
-                    </Typography>
-                    <Typography variant="caption" display="block" color="primary">
-                      {user.role}
-                    </Typography>
-                  </Box>
-                </MenuItem>
-                <MenuItem onClick={() => { handleUserMenuClose(); navigate('/profile'); }}>
-                  <PersonIcon sx={{ mr: 1 }} /> Profile
-                </MenuItem>
-                <MenuItem onClick={handleLogout}>
-                  <LogoutIcon sx={{ mr: 1 }} /> Logout
-                </MenuItem>
-              </Menu>
-            </>
-          )}
-        </Toolbar>
-      </AppBar>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+      {/* Static Sidebar */}
+      {sidebarContent}
 
-      {/* Sidebar Drawer */}
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-      >
-        {/* Mobile drawer */}
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{ keepMounted: true }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-        >
-          {drawer}
-        </Drawer>
-
-        {/* Desktop drawer */}
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
-
-      {/* Main Content */}
+      {/* Main Content Area */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          ml: `${SIDEBAR_WIDTH}px`,
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column'
         }}
       >
-        <Toolbar /> {/* Spacer for fixed AppBar */}
-        {children}
+        {/* Header Bar */}
+        <AppBar
+          position="sticky"
+          elevation={0}
+          sx={{
+            bgcolor: '#1e293b',
+            borderBottom: '1px solid #334155',
+            zIndex: 1100
+          }}
+        >
+          <Toolbar sx={{ 
+            minHeight: '72px !important',
+            px: 4,
+            justifyContent: 'space-between' 
+          }}>
+            <Typography variant="h6" noWrap component="div" sx={{ 
+              fontWeight: 600,
+              fontSize: '1.1rem',
+              color: 'text.primary',
+              letterSpacing: '-0.01em'
+            }}>
+              Dashboard
+            </Typography>
+            
+            {/* Header Actions */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <IconButton 
+                sx={{ 
+                  color: 'text.secondary',
+                  '&:hover': { 
+                    color: 'text.primary',
+                    bgcolor: 'rgba(99, 102, 241, 0.1)' 
+                  }
+                }}
+              >
+                <Badge badgeContent={3} color="error">
+                  <NotificationsIcon sx={{ fontSize: '1.35rem' }} />
+                </Badge>
+              </IconButton>
+              <IconButton 
+                sx={{ 
+                  color: 'text.secondary',
+                  '&:hover': { 
+                    color: 'text.primary',
+                    bgcolor: 'rgba(99, 102, 241, 0.1)' 
+                  }
+                }}
+              >
+                <SettingsIcon sx={{ fontSize: '1.35rem' }} />
+              </IconButton>
+              
+              {/* User Menu */}
+              {user && (
+                <>
+                  <IconButton onClick={handleUserMenuOpen} sx={{ ml: 0.5, p: 0.5 }}>
+                    <Avatar sx={{ 
+                      width: 38,
+                      height: 38,
+                      background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                      fontSize: '1rem',
+                      fontWeight: 600
+                    }}>
+                      {user.name.charAt(0).toUpperCase()}
+                    </Avatar>
+                  </IconButton>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleUserMenuClose}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    PaperProps={{
+                      sx: {
+                        mt: 1.5,
+                        minWidth: 220,
+                        borderRadius: '12px',
+                        border: '1px solid #334155'
+                      }
+                    }}
+                  >
+                    <MenuItem disabled sx={{ py: 2 }}>
+                      <Box>
+                        <Typography variant="body1" sx={{ fontWeight: 600, fontSize: '0.95rem', mb: 0.5 }}>
+                          {user.name}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 1 }}>
+                          {user.email}
+                        </Typography>
+                        <Chip 
+                          label={user.role} 
+                          size="small" 
+                          color={getRoleColor(user.role)}
+                          sx={{ height: 22, fontSize: '0.7rem', fontWeight: 600 }}
+                        />
+                      </Box>
+                    </MenuItem>
+                    <Divider sx={{ my: 1 }} />
+                    <MenuItem onClick={() => { handleUserMenuClose(); navigate('/profile'); }} sx={{ py: 1.25 }}>
+                      <PersonIcon sx={{ mr: 1.5, fontSize: '1.2rem' }} /> 
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>Profile</Typography>
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout} sx={{ color: 'error.main', py: 1.25 }}>
+                      <LogoutIcon sx={{ mr: 1.5, fontSize: '1.2rem' }} /> 
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>Sign Out</Typography>
+                    </MenuItem>
+                  </Menu>
+                </>
+              )}
+            </Box>
+          </Toolbar>
+        </AppBar>
+
+        {/* Page Content */}
+        <Box sx={{ 
+          flex: 1,
+          p: 4,
+          bgcolor: 'background.default'
+        }}>
+          {children}
+        </Box>
       </Box>
     </Box>
   );

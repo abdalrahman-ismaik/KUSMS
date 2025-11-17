@@ -1,29 +1,17 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
+import { ThemeProvider, CssBaseline } from '@mui/material';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import BookingPage from './pages/BookingPage';
 import AdminPage from './pages/AdminPage';
+import theme from './theme';
 import './App.css';
 
 // Placeholder pages (will be created next)
 const EventsPage = () => <div style={{ padding: '2rem' }}><h1>Events Calendar</h1><p>Coming soon...</p></div>;
 const MaintenancePage = () => <div style={{ padding: '2rem' }}><h1>Maintenance Requests</h1><p>Coming soon...</p></div>;
-
-// Create MUI theme
-const theme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-  },
-});
 
 function App() {
   return (
