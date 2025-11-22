@@ -31,10 +31,14 @@ app.get('/health', (req, res) => {
 import authRoutes from './routes/auth.js';
 import bookingRoutes from './routes/bookings.js';
 import facilityRoutes from './routes/facilities.js';
+import eventRoutes from './routes/events.js';
+import maintenanceRoutes from './routes/maintenance.js';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/facilities', facilityRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/maintenance', maintenanceRoutes);
 
 app.get('/api', (req, res) => {
   res.json({
@@ -59,14 +63,9 @@ app.use((req, res) => {
   });
 });
 
-// Error handler
-app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(err.status || 500).json({
-    error: err.name || 'Internal Server Error',
-    message: err.message || 'Something went wrong',
-  });
-});
+// Global error handler
+import errorHandler from './middleware/errorHandler.js';
+app.use(errorHandler);
 
 // Start server
 app.listen(PORT, () => {

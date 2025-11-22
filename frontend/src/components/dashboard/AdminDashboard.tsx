@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Typography, Grid, Button, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Card, CardContent, Typography, Button, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid } from '@mui/material';
 import PeopleIcon from '@mui/icons-material/People';
 import DomainIcon from '@mui/icons-material/Domain';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -85,7 +85,7 @@ export default function AdminDashboard() {
 
       {/* Stats Overview */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Total Users"
             value="248"
@@ -95,7 +95,7 @@ export default function AdminDashboard() {
             trend={{ value: 12, isPositive: true }}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Pending Approvals"
             value="8"
@@ -104,7 +104,7 @@ export default function AdminDashboard() {
             subtitle="Requires action"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Active Bookings"
             value="42"
@@ -113,7 +113,7 @@ export default function AdminDashboard() {
             subtitle="This week"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Facilities"
             value="15"
@@ -136,7 +136,7 @@ export default function AdminDashboard() {
         </Typography>
         <Grid container spacing={2}>
           {quickActions.map((action) => (
-            <Grid item xs={12} sm={6} md={4} lg={2} key={action.title}>
+            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }} key={action.title}>
               <Card
                 sx={{
                   cursor: 'pointer',

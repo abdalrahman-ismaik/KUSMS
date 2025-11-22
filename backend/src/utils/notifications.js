@@ -121,14 +121,15 @@ function getMaintenanceMessage(request, type) {
 
 /**
  * Send event notification
+ * @param {string} type - Notification type ('created', 'updated', 'deleted', 'approved', 'rejected', 'reminder')
  * @param {Object} event - Event object
- * @param {string} type - Notification type ('approved', 'rejected', 'reminder')
+ * @param {string} reason - Optional reason for rejection
  */
-function sendEventNotification(event, type, reason = null) {
+function sendEventNotification(type, event, reason = null) {
   const notification = {
     timestamp: new Date().toISOString(),
     type: 'EVENT_NOTIFICATION',
-    recipient: event.creator.email,
+    recipient: event.creator?.email || event.creatorEmail,
     subject: getEventSubject(type),
     message: getEventMessage(event, type, reason),
   };
@@ -142,6 +143,12 @@ function sendEventNotification(event, type, reason = null) {
  */
 function getEventSubject(type) {
   switch (type) {
+    case 'created':
+      return '✨ Event created successfully';
+    case 'updated':
+      return '📝 Event updated';
+    case 'deleted':
+      return '🗑️ Event deleted';
     case 'approved':
       return '🎉 Your event has been approved';
     case 'rejected':
@@ -161,6 +168,15 @@ function getEventMessage(event, type, reason) {
   const startTime = new Date(event.startTime).toLocaleString();
 
   switch (type) {
+    case 'created':
+      return `Event "${eventTitle}" has been created and published for ${startTime}.`;
+    
+    case 'updated':
+      return `Event "${eventTitle}" has been updated.`;
+    
+    case 'deleted':
+      return `Event "${eventTitle}" scheduled for ${startTime} has been deleted.`;
+    
     case 'approved':
       return `Your event "${eventTitle}" scheduled for ${startTime} has been approved and is now visible to all users.`;
     

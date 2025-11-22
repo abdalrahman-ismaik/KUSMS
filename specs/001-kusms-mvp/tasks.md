@@ -205,35 +205,35 @@ description: "Task list for KUSMS MVP implementation"
 
 ### Backend - Event Module
 
-- [ ] T076 [US2] Create backend/src/controllers/eventController.js with proposeEvent, getEvents, getPendingEvents, createEvent (admin), updateEvent, deleteEvent, approveEvent, rejectEvent functions
-- [ ] T077 [US2] Create backend/src/routes/events.js with GET /api/events, GET /api/events/pending, POST /api/events/propose, POST /api/events, PATCH /api/events/:id, DELETE /api/events/:id, PATCH /api/events/:id/approve, PATCH /api/events/:id/reject endpoints
-- [ ] T078 [US2] Apply RBAC middleware (students/faculty can propose, admins can manage all)
-- [ ] T079 [US2] Register event routes in backend/src/server.js
-- [ ] T080 [US2] Implement event notification in backend/src/utils/notifications.js for creation, updates, deletions
+- [x] T076 [US2] Create backend/src/controllers/eventController.js with proposeEvent, getEvents, getPendingEvents, createEvent (admin), updateEvent, deleteEvent, approveEvent, rejectEvent functions
+- [x] T077 [US2] Create backend/src/routes/events.js with GET /api/events, GET /api/events/pending, POST /api/events/propose, POST /api/events, PATCH /api/events/:id, DELETE /api/events/:id, PATCH /api/events/:id/approve, PATCH /api/events/:id/reject endpoints
+- [x] T078 [US2] Apply RBAC middleware (students/faculty can propose, admins can manage all)
+- [x] T079 [US2] Register event routes in backend/src/server.js
+- [x] T080 [US2] Implement event notification in backend/src/utils/notifications.js for creation, updates, deletions
 
 ### Frontend - Calendar Component
 
-- [ ] T081 [P] [US2] Install React Big Calendar: `npm install react-big-calendar`
-- [ ] T082 [P] [US2] Create frontend/src/services/eventService.js with API calls (getEvents, proposeEvent, createEvent, updateEvent, deleteEvent, approveEvent, rejectEvent)
-- [ ] T083 [US2] Create frontend/src/pages/EventsPage.jsx with calendar view and event list toggle
-- [ ] T084 [US2] Create frontend/src/components/events/Calendar.jsx wrapper around React Big Calendar with custom styling
-- [ ] T085 [US2] Implement event click handler in Calendar to show event details modal
-- [ ] T086 [US2] Create frontend/src/components/events/EventDetailsModal.jsx to display event info
+- [x] T081 [P] [US2] Install React Big Calendar: `npm install react-big-calendar`
+- [x] T082 [P] [US2] Create frontend/src/services/eventService.js with API calls (getEvents, proposeEvent, createEvent, updateEvent, deleteEvent, approveEvent, rejectEvent)
+- [x] T083 [US2] Create frontend/src/pages/EventsPage.jsx with calendar view and event list toggle
+- [x] T084 [US2] Create frontend/src/components/events/Calendar.jsx wrapper around React Big Calendar with custom styling
+- [x] T085 [US2] Implement event click handler in Calendar to show event details modal
+- [x] T086 [US2] Create frontend/src/components/events/EventDetailsModal.jsx to display event info
 
 ### Frontend - Event Proposal
 
-- [ ] T087 [P] [US2] Create frontend/src/components/events/EventProposalForm.jsx with title, description, date, time, location, facility fields
-- [ ] T088 [US2] Create frontend/src/components/events/ProposeEventButton.jsx to open EventProposalForm modal
-- [ ] T089 [US2] Integrate EventProposalForm submission with eventService.proposeEvent API call
-- [ ] T090 [US2] Display success message after event proposal submission
+- [x] T087 [P] [US2] Create frontend/src/components/events/EventProposalForm.jsx with title, description, date, time, location, facility fields
+- [x] T088 [US2] Create frontend/src/components/events/ProposeEventButton.jsx to open EventProposalForm modal
+- [x] T089 [US2] Integrate EventProposalForm submission with eventService.proposeEvent API call
+- [x] T090 [US2] Display success message after event proposal submission
 
 ### Frontend - Admin Calendar Management
 
-- [ ] T091 [US2] Create frontend/src/components/events/PendingEventsList.jsx in AdminPage to show pending event proposals
-- [ ] T092 [US2] Create frontend/src/components/events/EventApprovalModal.jsx with approve/reject/request changes actions
-- [ ] T093 [US2] Create frontend/src/components/events/EventManagementPanel.jsx for admins to create, edit, delete events directly
-- [ ] T094 [US2] Implement inline event editing in Calendar for admins (click event → edit modal)
-- [ ] T095 [US2] Implement event deletion confirmation dialog in Calendar
+- [x] T091 [US2] Create frontend/src/components/events/PendingEventsList.jsx in AdminPage to show pending event proposals
+- [x] T092 [US2] Create frontend/src/components/events/EventApprovalModal.jsx with approve/reject/request changes actions
+- [x] T093 [US2] Create frontend/src/components/events/EventManagementPanel.jsx for admins to create, edit, delete events directly
+- [x] T094 [US2] Implement inline event editing in Calendar for admins (click event → edit modal)
+- [x] T095 [US2] Implement event deletion confirmation dialog in Calendar
 
 ### Integration & Testing
 
@@ -255,28 +255,28 @@ description: "Task list for KUSMS MVP implementation"
 
 ### Backend - Maintenance Module
 
-- [ ] T100 [US3] Create backend/src/controllers/maintenanceController.js with createRequest, getRequests, getRequestById, updateRequestStatus functions
-- [ ] T101 [US3] Create backend/src/routes/maintenance.js with GET /api/maintenance, POST /api/maintenance, GET /api/maintenance/:id, PATCH /api/maintenance/:id/status endpoints
-- [ ] T102 [US3] Apply RBAC middleware (all authenticated users can create/view own, maintenance staff can view all and update)
-- [ ] T103 [US3] Register maintenance routes in backend/src/server.js
-- [ ] T104 [US3] Implement duplicate detection in backend/src/utils/maintenanceDuplicates.js (same facility + similar description)
-- [ ] T105 [US3] Integrate completion notification in maintenanceController when status changes to "Completed"
+- [x] T100 [US3] Create backend/src/controllers/maintenanceController.js with createRequest, getRequests, getRequestById, updateRequestStatus functions
+- [x] T101 [US3] Create backend/src/routes/maintenance.js with GET /api/maintenance, POST /api/maintenance, GET /api/maintenance/:id, PATCH /api/maintenance/:id/status endpoints
+- [x] T102 [US3] Apply RBAC middleware (all authenticated users can create/view own, maintenance staff can view all and update)
+- [x] T103 [US3] Register maintenance routes in backend/src/server.js
+- [x] T104 [US3] Implement duplicate detection in backend/src/utils/maintenanceDuplicates.js (same facility + similar description)
+- [x] T105 [US3] Integrate completion notification in maintenanceController when status changes to "Completed"
 
 ### Frontend - Maintenance Request UI
 
-- [ ] T106 [P] [US3] Create frontend/src/services/maintenanceService.js with API calls (createRequest, getRequests, updateStatus)
-- [ ] T107 [US3] Create frontend/src/pages/MaintenancePage.jsx with request form and list view
-- [ ] T108 [US3] Create frontend/src/components/maintenance/MaintenanceRequestForm.jsx with facility, description, optional image upload fields
-- [ ] T109 [US3] Create frontend/src/components/maintenance/MaintenanceRequestList.jsx to show user's requests with status badges
-- [ ] T110 [US3] Create frontend/src/components/maintenance/RequestStatusBadge.jsx with color-coded status display
-- [ ] T111 [US3] Implement request submission in MaintenanceRequestForm with success feedback
+- [x] T106 [P] [US3] Create frontend/src/services/maintenanceService.js with API calls (createRequest, getRequests, updateStatus)
+- [x] T107 [US3] Create frontend/src/pages/MaintenancePage.jsx with request form and list view
+- [x] T108 [US3] Create frontend/src/components/maintenance/MaintenanceRequestForm.jsx with facility, description, optional image upload fields
+- [x] T109 [US3] Create frontend/src/components/maintenance/MaintenanceRequestList.jsx to show user's requests with status badges
+- [x] T110 [US3] Create frontend/src/components/maintenance/RequestStatusBadge.jsx with color-coded status display
+- [x] T111 [US3] Implement request submission in MaintenanceRequestForm with success feedback
 
 ### Frontend - Maintenance Staff Dashboard
 
-- [ ] T112 [US3] Create frontend/src/components/maintenance/StaffRequestQueue.jsx to display all requests organized by status
-- [ ] T113 [US3] Create frontend/src/components/maintenance/RequestDetailsModal.jsx with status update dropdown and comment field
-- [ ] T114 [US3] Implement status update action in StaffRequestQueue (Pending → In Progress → Completed)
-- [ ] T115 [US3] Add duplicate warning in MaintenanceRequestForm if similar request exists
+- [x] T112 [US3] Create frontend/src/components/maintenance/StaffRequestQueue.jsx to display all requests organized by status
+- [x] T113 [US3] Create frontend/src/components/maintenance/RequestDetailsModal.jsx with status update dropdown and comment field
+- [x] T114 [US3] Implement status update action in StaffRequestQueue (Pending → In Progress → Completed)
+- [x] T115 [US3] Add duplicate warning in MaintenanceRequestForm if similar request exists
 
 ### Integration & Testing
 
@@ -295,12 +295,12 @@ description: "Task list for KUSMS MVP implementation"
 
 ### Cross-Story Integration
 
-- [ ] T119 Verify all API endpoints are documented in docs/API.md with request/response examples
+- [x] T119 Verify all API endpoints are documented in docs/API.md with request/response examples
 - [ ] T120 Test cross-feature workflows: booking facility for event → create event → link event to facility booking
-- [ ] T121 Implement global error handling in backend/src/middleware/errorHandler.js
-- [ ] T122 Implement frontend error boundary in frontend/src/components/common/ErrorBoundary.jsx
-- [ ] T123 Add loading states to all async operations (buttons, pages, modals)
-- [ ] T124 Implement toast notifications in frontend for success/error messages using react-hot-toast or similar
+- [x] T121 Implement global error handling in backend/src/middleware/errorHandler.js
+- [x] T122 Implement frontend error boundary in frontend/src/components/common/ErrorBoundary.jsx
+- [x] T123 Add loading states to all async operations (buttons, pages, modals)
+- [x] T124 Implement toast notifications in frontend for success/error messages using react-hot-toast or similar
 
 ### Manual Testing (Constitution Compliant)
 
@@ -324,12 +324,12 @@ description: "Task list for KUSMS MVP implementation"
 
 ### Deployment Preparation
 
-- [ ] T139 Create Dockerfile for frontend in frontend/Dockerfile (multi-stage build for production)
-- [ ] T140 Create Dockerfile for backend in backend/Dockerfile
-- [ ] T141 Update docker-compose.yml for production deployment with environment variables
-- [ ] T142 Create production environment variable templates (.env.production.example)
-- [ ] T143 Set up PostgreSQL backup strategy (document in docs/DEPLOYMENT.md)
-- [ ] T144 Configure CORS for production domain in backend/src/server.js
+- [x] T139 Create Dockerfile for frontend in frontend/Dockerfile (multi-stage build for production)
+- [x] T140 Create Dockerfile for backend in backend/Dockerfile
+- [x] T141 Update docker-compose.yml for production deployment with environment variables
+- [x] T142 Create production environment variable templates (.env.production.example)
+- [x] T143 Set up PostgreSQL backup strategy (document in docs/DEPLOYMENT.md)
+- [x] T144 Configure CORS for production domain in backend/src/server.js
 - [ ] T145 Test Docker builds locally: `docker-compose up --build`
 
 ### Deployment to Production

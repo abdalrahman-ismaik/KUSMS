@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Typography, Grid, Button, Chip } from '@mui/material';
+import { Box, Card, CardContent, Typography, Button, Chip, Grid } from '@mui/material';
 import BookIcon from '@mui/icons-material/Book';
 import EventIcon from '@mui/icons-material/Event';
 import BuildIcon from '@mui/icons-material/Build';
@@ -55,7 +55,7 @@ export default function StudentDashboard() {
 
       {/* Stats Overview */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Active Bookings"
             value="3"
@@ -64,7 +64,7 @@ export default function StudentDashboard() {
             subtitle="Upcoming reservations"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Pending Requests"
             value="1"
@@ -73,7 +73,7 @@ export default function StudentDashboard() {
             subtitle="Awaiting approval"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Upcoming Events"
             value="5"
@@ -82,7 +82,7 @@ export default function StudentDashboard() {
             subtitle="This week"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Completed"
             value="12"
@@ -106,7 +106,7 @@ export default function StudentDashboard() {
         </Typography>
         <Grid container spacing={2}>
           {quickActions.map((action) => (
-            <Grid item xs={12} sm={6} md={4} key={action.title}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={action.title}>
               <Card
                 sx={{
                   height: '100%',
