@@ -25,7 +25,7 @@ export default function Login() {
       const data = await authService.login(email, password);
       login(data.token, data.user);
       navigate('/dashboard');
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.message || 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);

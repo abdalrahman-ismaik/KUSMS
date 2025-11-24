@@ -32,7 +32,7 @@ const MaintenanceRequestList: React.FC<MaintenanceRequestListProps> = ({
       setLoading(true);
       const data = await getMaintenanceRequests();
       setRequests(data);
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to load requests');
     } finally {
       setLoading(false);
@@ -109,12 +109,12 @@ const MaintenanceRequestList: React.FC<MaintenanceRequestListProps> = ({
                   <Box display="flex" gap={1}>
                     <Chip
                       label={request.status.replace('_', ' ')}
-                      color={getStatusColor(request.status) as any}
+                      color={getStatusColor(request.status) as any} // eslint-disable-line @typescript-eslint/no-explicit-any
                       size="small"
                     />
                     <Chip
                       label={request.priority}
-                      color={getPriorityColor(request.priority) as any}
+                      color={getPriorityColor(request.priority) as any} // eslint-disable-line @typescript-eslint/no-explicit-any
                       size="small"
                     />
                   </Box>

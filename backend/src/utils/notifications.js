@@ -1,19 +1,38 @@
 import logger from './logger.js';
+import prisma from './prisma.js';
 
 /**
  * Send booking notification to user
- * For MVP: Console log notification (can be extended to email/SMS later)
+ * Saves to database and logs to console
  * @param {Object} booking - Booking object
  * @param {string} type - Notification type ('approved', 'rejected', 'created')
  * @param {string} reason - Optional reason for rejection
  */
-function sendBookingNotification(booking, type, reason = null) {
+async function sendBookingNotification(booking, type, reason = null) {
+  const subject = getNotificationSubject(type);
+  const message = getNotificationMessage(booking, type, reason);
+  
+  const notificationType = type === 'rejected' ? 'ERROR' : type === 'approved' ? 'SUCCESS' : 'INFO';
+
+  try {
+    await prisma.notification.create({
+      data: {
+        userId: booking.userId,
+        title: subject,
+        message: message,
+        type: notificationType,
+      }
+    });
+  } catch (error) {
+    logger.error('Failed to save notification to database:', error);
+  }
+
   const notification = {
     timestamp: new Date().toISOString(),
     type: 'BOOKING_NOTIFICATION',
-    recipient: booking.user.email,
-    subject: getNotificationSubject(type),
-    message: getNotificationMessage(booking, type, reason),
+    recipient: booking.user?.email || booking.userId,
+    subject: subject,
+    message: message,
   };
 
   // For MVP: Log to console (will be replaced with email service later)
@@ -69,13 +88,29 @@ function getNotificationMessage(booking, type, reason) {
  * @param {Object} request - Maintenance request object
  * @param {string} type - Notification type ('assigned', 'completed', 'updated')
  */
-function sendMaintenanceNotification(request, type) {
+async function sendMaintenanceNotification(request, type) {
+  const subject = getMaintenanceSubject(type);
+  const message = getMaintenanceMessage(request, type);
+  
+  try {
+    await prisma.notification.create({
+      data: {
+        userId: request.userId,
+        title: subject,
+        message: message,
+        type: 'INFO',
+      }
+    });
+  } catch (error) {
+    logger.error('Failed to save maintenance notification:', error);
+  }
+
   const notification = {
     timestamp: new Date().toISOString(),
     type: 'MAINTENANCE_NOTIFICATION',
-    recipient: request.user.email,
-    subject: getMaintenanceSubject(type),
-    message: getMaintenanceMessage(request, type),
+    recipient: request.user?.email || request.userId,
+    subject: subject,
+    message: message,
   };
 
   logger.info('📧 Notification sent:', notification);
@@ -125,13 +160,29 @@ function getMaintenanceMessage(request, type) {
  * @param {Object} event - Event object
  * @param {string} reason - Optional reason for rejection
  */
-function sendEventNotification(type, event, reason = null) {
+async function sendEventNotification(type, event, reason = null) {
+  const subject = getEventSubject(type);
+  const message = getEventMessage(event, type, reason);
+  
+  try {
+    await prisma.notification.create({
+      data: {
+        userId: event.creatorId,
+        title: subject,
+        message: message,
+        type: 'INFO',
+      }
+    });
+  } catch (error) {
+    logger.error('Failed to save event notification:', error);
+  }
+
   const notification = {
     timestamp: new Date().toISOString(),
     type: 'EVENT_NOTIFICATION',
     recipient: event.creator?.email || event.creatorEmail,
-    subject: getEventSubject(type),
-    message: getEventMessage(event, type, reason),
+    subject: subject,
+    message: message,
   };
 
   logger.info('📧 Notification sent:', notification);

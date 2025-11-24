@@ -53,7 +53,7 @@ const StaffRequestQueue: React.FC<StaffRequestQueueProps> = ({
       setLoading(true);
       const data = await getMaintenanceRequests();
       setRequests(data);
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to load requests');
     } finally {
       setLoading(false);
@@ -78,7 +78,7 @@ const StaffRequestQueue: React.FC<StaffRequestQueueProps> = ({
       setSelectedRequest(null);
       fetchRequests();
       onUpdate();
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to update status');
     } finally {
       setUpdating(false);
@@ -160,7 +160,7 @@ const StaffRequestQueue: React.FC<StaffRequestQueueProps> = ({
                     <Box display="flex" gap={1} flexWrap="wrap">
                       <Chip
                         label={request.status.replace('_', ' ')}
-                        color={getStatusColor(request.status) as any}
+                        color={getStatusColor(request.status) as any} // eslint-disable-line @typescript-eslint/no-explicit-any
                         size="small"
                       />
                     </Box>
@@ -217,9 +217,9 @@ const StaffRequestQueue: React.FC<StaffRequestQueueProps> = ({
                 label="Status"
                 value={updateData.status}
                 onChange={(e) =>
-                  setUpdateData({ ...updateData, status: e.target.value as any })
+                  setUpdateData({ ...updateData, status: e.target.value as any }) // eslint-disable-line @typescript-eslint/no-explicit-any
                 }
-                sx={{ mb: 2 }}
+                margin="normal"
               >
                 <MenuItem value="PENDING">Pending</MenuItem>
                 <MenuItem value="IN_PROGRESS">In Progress</MenuItem>

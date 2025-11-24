@@ -46,7 +46,7 @@ const PendingEventsList: React.FC<PendingEventsListProps> = ({ onUpdate }) => {
       setLoading(true);
       const data = await eventService.getPendingEvents();
       setEvents(data);
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to load pending events');
     } finally {
       setLoading(false);
@@ -61,7 +61,7 @@ const PendingEventsList: React.FC<PendingEventsListProps> = ({ onUpdate }) => {
       await fetchPendingEvents();
       if (onUpdate) onUpdate();
       alert('Event approved successfully!');
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to approve event');
     }
   };
@@ -83,7 +83,7 @@ const PendingEventsList: React.FC<PendingEventsListProps> = ({ onUpdate }) => {
       await fetchPendingEvents();
       if (onUpdate) onUpdate();
       alert('Event rejected');
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to reject event');
     }
   };

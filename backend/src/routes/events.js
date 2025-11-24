@@ -19,7 +19,7 @@ const router = express.Router();
  * @desc    Get all events (filtered by role)
  * @access  Public (shows only published events to non-admins)
  */
-router.get('/', getEvents);
+router.get('/', verifyAuth, getEvents);
 
 /**
  * @route   GET /api/events/pending

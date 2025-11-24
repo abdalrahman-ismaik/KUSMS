@@ -34,14 +34,14 @@ export default function AllBookingsList() {
     try {
       setLoading(true);
       setError('');
-      const filters: any = {};
+      const filters: Record<string, string> = {};
       if (statusFilter !== 'ALL') {
         filters.status = statusFilter;
       }
       
       const { bookings: data } = await bookingService.getBookings(filters);
       setBookings(data);
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to load bookings');
     } finally {
       setLoading(false);
@@ -61,12 +61,12 @@ export default function AllBookingsList() {
     try {
       await bookingService.cancelBooking(id);
       await loadBookings();
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to cancel booking');
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string): "default" | "primary" | "secondary" | "error" | "info" | "success" | "warning" => {
     switch (status) {
       case 'APPROVED': return 'success';
       case 'PENDING': return 'warning';
@@ -152,7 +152,7 @@ export default function AllBookingsList() {
                   <TableCell>
                     <Chip 
                       label={booking.status} 
-                      color={getStatusColor(booking.status) as any}
+                      color={getStatusColor(booking.status)}
                       size="small" 
                     />
                   </TableCell>

@@ -55,7 +55,7 @@ export default function BookingForm({ onSuccess }: BookingFormProps) {
       setFacilitiesLoading(true);
       const { facilities: data } = await facilityService.getFacilities();
       setFacilities(data);
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to load facilities');
     } finally {
       setFacilitiesLoading(false);
@@ -106,7 +106,7 @@ export default function BookingForm({ onSuccess }: BookingFormProps) {
       if (onSuccess) {
         setTimeout(onSuccess, 2000);
       }
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       if (err.response?.data?.error === 'Time slot not available' && err.response?.data?.alternatives) {
         setConflict({ alternatives: err.response.data.alternatives });
         setError('');

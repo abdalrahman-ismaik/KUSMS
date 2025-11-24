@@ -217,6 +217,7 @@ export default function StudentDashboard() {
             size="small" 
             endIcon={<ArrowForwardIcon sx={{ fontSize: '1rem' }} />}
             sx={{ fontWeight: 600, fontSize: '0.875rem' }}
+            onClick={() => navigate('/bookings')}
           >
             View All
           </Button>

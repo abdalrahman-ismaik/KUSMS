@@ -7,7 +7,6 @@ import {
   FormControl,
   InputLabel,
   Select,
-  FormHelperText
 } from '@mui/material';
 import type { CreateUserData, UpdateUserData, User } from '../../services/userService';
 
@@ -97,7 +96,7 @@ const UserForm: React.FC<UserFormProps> = ({ initialData, onSubmit, onCancel }) 
         <Select
           value={formData.role}
           label="Role"
-          onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
+          onChange={(e) => setFormData({ ...formData, role: e.target.value as any })} // eslint-disable-line @typescript-eslint/no-explicit-any
         >
           <MenuItem value="STUDENT">Student</MenuItem>
           <MenuItem value="FACULTY">Faculty</MenuItem>

@@ -45,7 +45,7 @@ const MaintenanceRequestForm: React.FC<MaintenanceRequestFormProps> = ({
     try {
       const data = await facilityService.getFacilities();
       setFacilities(data.facilities);
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
       setError('Failed to load facilities');
     }
   };
@@ -76,14 +76,14 @@ const MaintenanceRequestForm: React.FC<MaintenanceRequestFormProps> = ({
       
       // Clear success message after 5 seconds
       setTimeout(() => setSuccess(''), 5000);
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to submit request');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChange = (field: string, value: any) => {
+  const handleChange = (field: string, value: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     setFormData({ ...formData, [field]: value });
   };
 

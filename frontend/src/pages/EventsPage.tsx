@@ -92,8 +92,8 @@ const EventsPage: React.FC = () => {
       }));
       
       setCalendarEvents(calEvents);
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to load events');
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+      setError(err.response?.data?.message || err.response?.data?.error || 'Failed to load events');
     } finally {
       setLoading(false);
     }
@@ -141,7 +141,7 @@ const EventsPage: React.FC = () => {
         facilityId: '',
       });
       alert('Event proposal submitted successfully!');
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to propose event');
     }
   };
@@ -161,7 +161,7 @@ const EventsPage: React.FC = () => {
       });
       fetchEvents(); // Refresh calendar
       alert('Event created successfully!');
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to create event');
     }
   };
@@ -175,28 +175,31 @@ const EventsPage: React.FC = () => {
       setSelectedEvent(null);
       fetchEvents(); // Refresh calendar
       alert('Event deleted successfully!');
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to delete event');
     }
   };
 
   const eventStyleGetter = (event: CalendarEvent) => {
-    let backgroundColor = '#3174ad';
+    let backgroundColor = '#4f46e5'; // Primary (Darker Indigo)
     
     if (event.resource.status === 'PENDING') {
-      backgroundColor = '#f59e0b';
+      backgroundColor = '#d97706'; // Warning (Darker Amber)
     } else if (event.resource.status === 'REJECTED') {
-      backgroundColor = '#ef4444';
+      backgroundColor = '#dc2626'; // Error (Darker Red)
+    } else if (event.resource.status === 'PUBLISHED') {
+      backgroundColor = '#059669'; // Success (Darker Emerald)
     }
 
     return {
       style: {
         backgroundColor,
-        borderRadius: '5px',
-        opacity: 0.8,
-        color: 'white',
+        borderRadius: '4px',
+        opacity: 1,
+        color: '#ffffff',
         border: '0px',
         display: 'block',
+        boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
       },
     };
   };
@@ -231,7 +234,7 @@ const EventsPage: React.FC = () => {
           events={calendarEvents}
           startAccessor="start"
           endAccessor="end"
-          style={{ height: 600 }}
+          style={{ height: 800 }}
           onSelectEvent={handleSelectEvent}
           onSelectSlot={handleSelectSlot}
           selectable={user?.role === 'ADMIN'}

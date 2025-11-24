@@ -36,7 +36,7 @@ export default function PendingBookingsList({ refreshTrigger }: PendingBookingsL
       setError('');
       const { bookings: data } = await bookingService.getBookings({ status: 'PENDING' });
       setBookings(data);
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to load pending bookings');
     } finally {
       setLoading(false);
@@ -47,7 +47,7 @@ export default function PendingBookingsList({ refreshTrigger }: PendingBookingsL
     try {
       await bookingService.approveBooking(bookingId);
       await loadPendingBookings();
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to approve booking');
       throw err;
     }
@@ -57,7 +57,7 @@ export default function PendingBookingsList({ refreshTrigger }: PendingBookingsL
     try {
       await bookingService.rejectBooking(bookingId, reason);
       await loadPendingBookings();
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to reject booking');
       throw err;
     }

@@ -9,9 +9,10 @@ import PeopleIcon from '@mui/icons-material/People';
 import DomainIcon from '@mui/icons-material/Domain';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { notificationService, type Notification } from '../../services/notificationService';
 
 const SIDEBAR_WIDTH = 280;
 
@@ -60,9 +61,38 @@ export default function Layout({ children }: LayoutProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [notificationAnchorEl, setNotificationAnchorEl] = useState<null | HTMLElement>(null);
   const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+
+  const fetchNotifications = useCallback(async () => {
+    try {
+      const data = await notificationService.getNotifications();
+      setNotifications(data);
+      setUnreadCount(data.filter(n => !n.read).length);
+    } catch (error) {
+      console.error('Failed to fetch notifications', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      fetchNotifications();
+      const interval = setInterval(fetchNotifications, 60000); // Poll every minute
+      return () => clearInterval(interval);
+    }
+  }, [user, fetchNotifications]);
+
+  const handleMarkAllRead = async () => {
+    try {
+      await notificationService.markAsRead();
+      fetchNotifications();
+    } catch (error) {
+      console.error('Failed to mark notifications as read', error);
+    }
+  };
 
   const handleUserMenuOpen = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -431,7 +461,7 @@ export default function Layout({ children }: LayoutProps) {
                   }
                 }}
               >
-                <Badge badgeContent={3} color="error">
+                <Badge badgeContent={unreadCount} color="error">
                   <NotificationsIcon sx={{ fontSize: '1.35rem' }} />
                 </Badge>
               </IconButton>
@@ -453,26 +483,40 @@ export default function Layout({ children }: LayoutProps) {
               >
                 <Box sx={{ p: 2, borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Typography variant="subtitle1" fontWeight={600}>Notifications</Typography>
-                  <Typography variant="caption" color="primary" sx={{ cursor: 'pointer' }}>Mark all as read</Typography>
+                  {unreadCount > 0 && (
+                    <Typography variant="caption" color="primary" sx={{ cursor: 'pointer' }} onClick={handleMarkAllRead}>
+                      Mark all as read
+                    </Typography>
+                  )}
                 </Box>
-                <MenuItem onClick={handleNotificationMenuClose}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, width: '100%' }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant="body2" fontWeight={600}>New Booking Request</Typography>
-                      <Typography variant="caption" color="text.secondary">5 min ago</Typography>
-                    </Box>
-                    <Typography variant="caption" color="text.secondary" noWrap>John Doe requested Room 101</Typography>
+                {notifications.length === 0 ? (
+                  <Box sx={{ p: 2, textAlign: 'center' }}>
+                    <Typography variant="body2" color="text.secondary">No notifications</Typography>
                   </Box>
-                </MenuItem>
-                <MenuItem onClick={handleNotificationMenuClose}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, width: '100%' }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant="body2" fontWeight={600}>Maintenance Completed</Typography>
-                      <Typography variant="caption" color="text.secondary">1 hour ago</Typography>
-                    </Box>
-                    <Typography variant="caption" color="text.secondary" noWrap>AC repair in Lab 3 is done</Typography>
-                  </Box>
-                </MenuItem>
+                ) : (
+                  notifications.map((notification) => (
+                    <MenuItem 
+                      key={notification.id} 
+                      onClick={handleNotificationMenuClose}
+                      sx={{ 
+                        bgcolor: notification.read ? 'transparent' : 'rgba(99, 102, 241, 0.05)',
+                        borderBottom: '1px solid #f1f5f9'
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, width: '100%' }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" fontWeight={600}>{notification.title}</Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {new Date(notification.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </Typography>
+                        </Box>
+                        <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'normal' }}>
+                          {notification.message}
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  ))
+                )}
                 <Divider />
                 <Box sx={{ p: 1, textAlign: 'center' }}>
                   <Typography variant="caption" color="primary" sx={{ cursor: 'pointer', fontWeight: 600 }}>View All Notifications</Typography>

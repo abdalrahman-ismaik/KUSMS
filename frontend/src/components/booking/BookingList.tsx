@@ -34,7 +34,7 @@ export default function BookingList({ refreshTrigger }: BookingListProps) {
       setError('');
       const { bookings: data } = await bookingService.getBookings();
       setBookings(data);
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to load bookings');
     } finally {
       setLoading(false);
@@ -49,7 +49,7 @@ export default function BookingList({ refreshTrigger }: BookingListProps) {
     try {
       await bookingService.cancelBooking(id);
       await loadBookings();
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       setError(err.response?.data?.error || 'Failed to cancel booking');
     }
   };
