@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { CircularProgress, Box } from '@mui/material';
 import { useAuth } from '../../hooks/useAuth';
+import Layout from '../common/Layout';
 import type { ReactNode } from 'react';
 
 interface ProtectedRouteProps {
@@ -34,5 +35,5 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
     return <Navigate to="/dashboard" replace />;
   }
 
-  return <>{children}</>;
+  return <Layout>{children}</Layout>;
 }
