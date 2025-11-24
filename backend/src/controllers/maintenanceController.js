@@ -43,9 +43,7 @@ export async function createRequest(req, res, next) {
       data: {
         facilityId,
         description,
-        priority: priority || 'MEDIUM',
-        imageUrl,
-        reportedById: userId,
+        userId,
         status: 'PENDING',
       },
       include: {
@@ -56,7 +54,7 @@ export async function createRequest(req, res, next) {
             location: true,
           },
         },
-        reportedBy: {
+        user: {
           select: {
             id: true,
             name: true,
@@ -95,7 +93,7 @@ export async function getRequests(req, res, next) {
 
     // Non-maintenance staff can only see their own requests
     if (userRole !== 'MAINTENANCE' && userRole !== 'ADMIN') {
-      where.reportedById = userId;
+      where.userId = userId;
     }
 
     // Apply filters
@@ -104,9 +102,6 @@ export async function getRequests(req, res, next) {
     }
     if (facilityId) {
       where.facilityId = facilityId;
-    }
-    if (priority) {
-      where.priority = priority;
     }
 
     const requests = await prisma.maintenanceRequest.findMany({
@@ -119,7 +114,7 @@ export async function getRequests(req, res, next) {
             location: true,
           },
         },
-        reportedBy: {
+        user: {
           select: {
             id: true,
             name: true,
@@ -127,7 +122,7 @@ export async function getRequests(req, res, next) {
             role: true,
           },
         },
-        assignedTo: {
+        assignedStaff: {
           select: {
             id: true,
             name: true,
@@ -136,7 +131,6 @@ export async function getRequests(req, res, next) {
         },
       },
       orderBy: [
-        { priority: 'desc' }, // HIGH first, then MEDIUM, then LOW
         { createdAt: 'desc' },
       ],
     });
@@ -166,7 +160,7 @@ export async function getRequestById(req, res, next) {
             location: true,
           },
         },
-        reportedBy: {
+        user: {
           select: {
             id: true,
             name: true,
@@ -174,7 +168,7 @@ export async function getRequestById(req, res, next) {
             role: true,
           },
         },
-        assignedTo: {
+        assignedStaff: {
           select: {
             id: true,
             name: true,
@@ -192,7 +186,7 @@ export async function getRequestById(req, res, next) {
     if (
       userRole !== 'MAINTENANCE' &&
       userRole !== 'ADMIN' &&
-      request.reportedById !== userId
+      request.userId !== userId
     ) {
       throw new ValidationError('You do not have permission to view this request');
     }
@@ -223,7 +217,7 @@ export async function updateRequestStatus(req, res, next) {
       where: { id },
       include: {
         facility: true,
-        reportedBy: true,
+        user: true,
       },
     });
 
@@ -234,8 +228,7 @@ export async function updateRequestStatus(req, res, next) {
     // Build update data
     const updateData = {
       status,
-      ...(notes && { notes }),
-      ...(assignedToId && { assignedToId }),
+      ...(assignedToId && { assignedTo: assignedToId }),
     };
 
     // If marking as completed, set completion date
@@ -255,7 +248,7 @@ export async function updateRequestStatus(req, res, next) {
             location: true,
           },
         },
-        reportedBy: {
+        user: {
           select: {
             id: true,
             name: true,
@@ -263,7 +256,7 @@ export async function updateRequestStatus(req, res, next) {
             role: true,
           },
         },
-        assignedTo: {
+        assignedStaff: {
           select: {
             id: true,
             name: true,

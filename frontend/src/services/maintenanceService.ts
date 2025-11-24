@@ -9,19 +9,16 @@ export interface MaintenanceRequest {
     location: string;
   };
   description: string;
-  priority: 'LOW' | 'MEDIUM' | 'HIGH';
   status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
-  imageUrl?: string;
-  notes?: string;
-  reportedById: string;
-  reportedBy: {
+  userId: string;
+  user: {
     id: string;
     name: string;
     email: string;
     role: string;
   };
-  assignedToId?: string;
-  assignedTo?: {
+  assignedTo?: string;
+  assignedStaff?: {
     id: string;
     name: string;
     email: string;
@@ -35,13 +32,10 @@ export interface MaintenanceRequest {
 export interface CreateMaintenanceRequestData {
   facilityId: string;
   description: string;
-  priority?: 'LOW' | 'MEDIUM' | 'HIGH';
-  imageUrl?: string;
 }
 
 export interface UpdateMaintenanceStatusData {
   status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
-  notes?: string;
   assignedToId?: string;
 }
 

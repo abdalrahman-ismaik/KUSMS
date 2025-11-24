@@ -41,7 +41,6 @@ const StaffRequestQueue: React.FC<StaffRequestQueueProps> = ({
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const [updateData, setUpdateData] = useState({
     status: 'PENDING' as 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED',
-    notes: '',
   });
   const [updating, setUpdating] = useState(false);
 
@@ -65,7 +64,6 @@ const StaffRequestQueue: React.FC<StaffRequestQueueProps> = ({
     setSelectedRequest(request);
     setUpdateData({
       status: request.status,
-      notes: request.notes || '',
     });
     setShowUpdateDialog(true);
   };
@@ -97,19 +95,6 @@ const StaffRequestQueue: React.FC<StaffRequestQueueProps> = ({
         return 'success';
       case 'CANCELLED':
         return 'error';
-      default:
-        return 'default';
-    }
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'HIGH':
-        return 'error';
-      case 'MEDIUM':
-        return 'warning';
-      case 'LOW':
-        return 'success';
       default:
         return 'default';
     }
@@ -178,11 +163,6 @@ const StaffRequestQueue: React.FC<StaffRequestQueueProps> = ({
                         color={getStatusColor(request.status) as any}
                         size="small"
                       />
-                      <Chip
-                        label={request.priority}
-                        color={getPriorityColor(request.priority) as any}
-                        size="small"
-                      />
                     </Box>
                   </Box>
 
@@ -195,17 +175,12 @@ const StaffRequestQueue: React.FC<StaffRequestQueueProps> = ({
                       <strong>Location:</strong> {request.facility.location}
                     </Typography>
                     <Typography variant="caption" color="text.secondary" display="block">
-                      <strong>Reported by:</strong> {request.reportedBy.name}
+                      <strong>Reported by:</strong> {request.user.name}
                     </Typography>
                     <Typography variant="caption" color="text.secondary" display="block">
                       <strong>Submitted:</strong>{' '}
                       {new Date(request.createdAt).toLocaleString()}
                     </Typography>
-                    {request.notes && (
-                      <Typography variant="caption" color="text.secondary" display="block" mt={1}>
-                        <strong>Notes:</strong> {request.notes}
-                      </Typography>
-                    )}
                   </Box>
 
                   <Button
@@ -251,16 +226,6 @@ const StaffRequestQueue: React.FC<StaffRequestQueueProps> = ({
                 <MenuItem value="COMPLETED">Completed</MenuItem>
                 <MenuItem value="CANCELLED">Cancelled</MenuItem>
               </TextField>
-
-              <TextField
-                fullWidth
-                label="Notes"
-                multiline
-                rows={3}
-                value={updateData.notes}
-                onChange={(e) => setUpdateData({ ...updateData, notes: e.target.value })}
-                placeholder="Add notes about the work performed..."
-              />
             </Box>
           )}
         </DialogContent>

@@ -58,6 +58,8 @@ interface MenuItem {
  */
 export default function Layout({ children }: LayoutProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [notificationAnchorEl, setNotificationAnchorEl] = useState<null | HTMLElement>(null);
+  const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
@@ -68,6 +70,22 @@ export default function Layout({ children }: LayoutProps) {
 
   const handleUserMenuClose = useCallback(() => {
     setAnchorEl(null);
+  }, []);
+
+  const handleNotificationMenuOpen = useCallback((event: React.MouseEvent<HTMLElement>) => {
+    setNotificationAnchorEl(event.currentTarget);
+  }, []);
+
+  const handleNotificationMenuClose = useCallback(() => {
+    setNotificationAnchorEl(null);
+  }, []);
+
+  const handleSettingsMenuOpen = useCallback((event: React.MouseEvent<HTMLElement>) => {
+    setSettingsAnchorEl(event.currentTarget);
+  }, []);
+
+  const handleSettingsMenuClose = useCallback(() => {
+    setSettingsAnchorEl(null);
   }, []);
 
   const handleLogout = useCallback(() => {
@@ -404,6 +422,7 @@ export default function Layout({ children }: LayoutProps) {
             {/* Header Actions */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
               <IconButton 
+                onClick={handleNotificationMenuOpen}
                 sx={{ 
                   color: 'text.secondary',
                   '&:hover': { 
@@ -416,7 +435,52 @@ export default function Layout({ children }: LayoutProps) {
                   <NotificationsIcon sx={{ fontSize: '1.35rem' }} />
                 </Badge>
               </IconButton>
+              <Menu
+                anchorEl={notificationAnchorEl}
+                open={Boolean(notificationAnchorEl)}
+                onClose={handleNotificationMenuClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                PaperProps={{
+                  sx: {
+                    mt: 1.5,
+                    width: 320,
+                    maxHeight: 400,
+                    borderRadius: '12px',
+                    border: '1px solid #334155'
+                  }
+                }}
+              >
+                <Box sx={{ p: 2, borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography variant="subtitle1" fontWeight={600}>Notifications</Typography>
+                  <Typography variant="caption" color="primary" sx={{ cursor: 'pointer' }}>Mark all as read</Typography>
+                </Box>
+                <MenuItem onClick={handleNotificationMenuClose}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, width: '100%' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant="body2" fontWeight={600}>New Booking Request</Typography>
+                      <Typography variant="caption" color="text.secondary">5 min ago</Typography>
+                    </Box>
+                    <Typography variant="caption" color="text.secondary" noWrap>John Doe requested Room 101</Typography>
+                  </Box>
+                </MenuItem>
+                <MenuItem onClick={handleNotificationMenuClose}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, width: '100%' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant="body2" fontWeight={600}>Maintenance Completed</Typography>
+                      <Typography variant="caption" color="text.secondary">1 hour ago</Typography>
+                    </Box>
+                    <Typography variant="caption" color="text.secondary" noWrap>AC repair in Lab 3 is done</Typography>
+                  </Box>
+                </MenuItem>
+                <Divider />
+                <Box sx={{ p: 1, textAlign: 'center' }}>
+                  <Typography variant="caption" color="primary" sx={{ cursor: 'pointer', fontWeight: 600 }}>View All Notifications</Typography>
+                </Box>
+              </Menu>
+
               <IconButton 
+                onClick={handleSettingsMenuOpen}
                 sx={{ 
                   color: 'text.secondary',
                   '&:hover': { 
@@ -427,6 +491,32 @@ export default function Layout({ children }: LayoutProps) {
               >
                 <SettingsIcon sx={{ fontSize: '1.35rem' }} />
               </IconButton>
+              <Menu
+                anchorEl={settingsAnchorEl}
+                open={Boolean(settingsAnchorEl)}
+                onClose={handleSettingsMenuClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                PaperProps={{
+                  sx: {
+                    mt: 1.5,
+                    minWidth: 200,
+                    borderRadius: '12px',
+                    border: '1px solid #334155'
+                  }
+                }}
+              >
+                <MenuItem onClick={handleSettingsMenuClose}>
+                  <Typography variant="body2">Account Settings</Typography>
+                </MenuItem>
+                <MenuItem onClick={handleSettingsMenuClose}>
+                  <Typography variant="body2">Preferences</Typography>
+                </MenuItem>
+                <Divider />
+                <MenuItem onClick={handleSettingsMenuClose}>
+                  <Typography variant="body2">Help & Support</Typography>
+                </MenuItem>
+              </Menu>
               
               {/* User Menu */}
               {user && (

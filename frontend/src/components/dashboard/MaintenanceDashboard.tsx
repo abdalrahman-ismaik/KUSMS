@@ -1,18 +1,54 @@
-import { Box, Card, CardContent, Typography, Chip } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Box, Card, CardContent, Typography, Chip, CircularProgress, Alert } from '@mui/material';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import BuildIcon from '@mui/icons-material/Build';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useNavigate } from 'react-router-dom';
+import { dashboardService } from '../../services/dashboardService';
+import type { MaintenanceStats } from '../../services/dashboardService';
 
 export default function MaintenanceDashboard() {
   const navigate = useNavigate();
+  const [stats, setStats] = useState<MaintenanceStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const stats = [
-    { label: 'Assigned to Me', value: '5', color: '#1976d2' },
-    { label: 'In Progress', value: '3', color: '#ed6c02' },
-    { label: 'Completed Today', value: '2', color: '#2e7d32' },
-    { label: 'Pending', value: '12', color: '#d32f2f' },
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const data = await dashboardService.getStats();
+        setStats(data.stats as MaintenanceStats);
+      } catch (err) {
+        setError('Failed to load dashboard statistics');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  const statCards = [
+    { label: 'Assigned Tasks', value: loading ? '...' : stats?.assignedTasks.toString() || '0', color: '#1976d2' },
+    { label: 'Pending Requests', value: loading ? '...' : stats?.pendingRequests.toString() || '0', color: '#d32f2f' },
   ];
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    );
+  }
 
   // Mock data for assigned tasks
   const assignedTasks = [
@@ -78,8 +114,8 @@ export default function MaintenanceDashboard() {
       </Typography>
 
       {/* Statistics */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 2, mb: 4 }}>
-        {stats.map((stat) => (
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 2, mb: 4 }}>
+        {statCards.map((stat) => (
           <Card key={stat.label}>
             <CardContent>
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -91,6 +127,44 @@ export default function MaintenanceDashboard() {
             </CardContent>
           </Card>
         ))}
+      </Box>
+
+      {/* Predictive Maintenance Insights */}
+      <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+        Predictive Maintenance Insights (AI Powered)
+      </Typography>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 2, mb: 4 }}>
+        {stats?.predictedRisks?.map((risk) => (
+          <Card key={risk.id} sx={{ borderLeft: 6, borderColor: risk.riskLevel === 'HIGH' ? 'error.main' : risk.riskLevel === 'MEDIUM' ? 'warning.main' : 'success.main' }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {risk.name}
+                </Typography>
+                <Chip 
+                  label={`${risk.riskLevel} RISK`} 
+                  color={risk.riskLevel === 'HIGH' ? 'error' : risk.riskLevel === 'MEDIUM' ? 'warning' : 'success'}
+                  size="small"
+                />
+              </Box>
+              <Typography variant="body2" color="text.secondary" gutterBottom>
+                <strong>{risk.requestCount}</strong> requests in last 90 days
+              </Typography>
+              <Typography variant="body2" sx={{ fontStyle: 'italic', color: 'text.primary' }}>
+                "{risk.prediction}"
+              </Typography>
+            </CardContent>
+          </Card>
+        ))}
+        {(!stats?.predictedRisks || stats.predictedRisks.length === 0) && (
+          <Card sx={{ gridColumn: '1 / -1' }}>
+            <CardContent>
+              <Typography variant="body2" color="text.secondary" align="center">
+                No high-risk facilities detected.
+              </Typography>
+            </CardContent>
+          </Card>
+        )}
       </Box>
 
       {/* Quick Actions */}

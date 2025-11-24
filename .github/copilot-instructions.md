@@ -12,6 +12,9 @@ Auto-generated from all feature plans. Last updated: 2025-11-24
 4. **Speed Over Process**: Timeline takes precedence, document deviations.
 
 ## Active Technologies
+- Node.js (Backend), TypeScript/React 19.2.0 (Frontend) + Express, Prisma, Vite, Material UI (004-user-management)
+- SQLite (via Prisma) (004-user-management)
+- Node.js (Backend), TypeScript/React (Frontend) + Express, Prisma, React, Material UI (005-dashboard-real-data)
 
 - TypeScript 5.9.3 with React 19.2.0 (002-sidebar-navigation)
 
@@ -38,6 +41,8 @@ npm test; npm run lint
 TypeScript 5.9.3 with React 19.2.0: Follow standard conventions
 
 ## Recent Changes
+- 005-dashboard-real-data: Added Node.js (Backend), TypeScript/React (Frontend) + Express, Prisma, React, Material UI
+- 004-user-management: Added Node.js (Backend), TypeScript/React 19.2.0 (Frontend) + Express, Prisma, Vite, Material UI
 
 - 002-sidebar-navigation: Added TypeScript 5.9.3 with React 19.2.0
 

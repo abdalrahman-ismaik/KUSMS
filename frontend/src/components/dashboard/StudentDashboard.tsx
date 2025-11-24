@@ -1,16 +1,37 @@
-import { Box, Card, CardContent, Typography, Button, Chip, Grid } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Box, Card, CardContent, Typography, Button, Chip, Grid, CircularProgress, Alert } from '@mui/material';
 import BookIcon from '@mui/icons-material/Book';
 import EventIcon from '@mui/icons-material/Event';
 import BuildIcon from '@mui/icons-material/Build';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PendingIcon from '@mui/icons-material/Pending';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useNavigate } from 'react-router-dom';
 import StatCard from '../common/StatCard';
+import { dashboardService } from '../../services/dashboardService';
+import type { StudentStats } from '../../services/dashboardService';
 
 export default function StudentDashboard() {
   const navigate = useNavigate();
+  const [stats, setStats] = useState<StudentStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const data = await dashboardService.getStats();
+        setStats(data.stats as StudentStats);
+      } catch (err) {
+        setError('Failed to load dashboard statistics');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   const quickActions = [
     {
@@ -36,6 +57,22 @@ export default function StudentDashboard() {
     },
   ];
 
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    );
+  }
+
   return (
     <Box>
       {/* Header */}
@@ -55,44 +92,59 @@ export default function StudentDashboard() {
 
       {/* Stats Overview */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <StatCard
             title="Active Bookings"
-            value="3"
+            value={loading ? "..." : stats?.activeBookings.toString() || "0"}
             icon={<BookIcon sx={{ fontSize: 28 }} />}
             color="primary"
             subtitle="Upcoming reservations"
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <StatCard
             title="Pending Requests"
-            value="1"
+            value={loading ? "..." : stats?.pendingBookings.toString() || "0"}
             icon={<PendingIcon sx={{ fontSize: 28 }} />}
             color="warning"
             subtitle="Awaiting approval"
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <StatCard
             title="Upcoming Events"
-            value="5"
+            value={loading ? "..." : stats?.upcomingEvents.toString() || "0"}
             icon={<CalendarTodayIcon sx={{ fontSize: 28 }} />}
             color="info"
             subtitle="This week"
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <StatCard
-            title="Completed"
-            value="12"
-            icon={<CheckCircleIcon sx={{ fontSize: 28 }} />}
-            color="success"
-            subtitle="This semester"
-            trend={{ value: 20, isPositive: true }}
-          />
-        </Grid>
       </Grid>
+
+      {/* Smart Suggestion (AI Powered) */}
+      {stats?.suggestion && (
+        <Box sx={{ mb: 4 }}>
+          <Card sx={{ 
+            background: 'linear-gradient(45deg, #1976d2 30%, #2196f3 90%)', 
+            color: 'white' 
+          }}>
+            <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box sx={{ bgcolor: 'rgba(255,255,255,0.2)', p: 1.5, borderRadius: '50%' }}>
+                <BookIcon />
+              </Box>
+              <Box>
+                <Typography variant="subtitle1" fontWeight="bold" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  {stats.suggestion.title}
+                  <Chip label="AI Suggestion" size="small" sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white', height: 20, fontSize: '0.65rem' }} />
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                  {stats.suggestion.message}
+                </Typography>
+              </Box>
+            </CardContent>
+          </Card>
+        </Box>
+      )}
 
       {/* Quick Actions */}
       <Box sx={{ mb: 5 }}>

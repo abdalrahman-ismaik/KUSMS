@@ -2,6 +2,8 @@ import { Box, Typography, Paper, Tabs, Tab } from '@mui/material';
 import { useState } from 'react';
 import PendingBookingsList from '../components/booking/PendingBookingsList';
 import PendingEventsList from '../components/events/PendingEventsList';
+import FacilityList from '../components/facilities/FacilityList';
+import UserList from '../components/users/UserList';
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState(0);
@@ -38,16 +40,8 @@ export default function AdminPage() {
             All bookings view coming soon...
           </Typography>
         )}
-        {activeTab === 3 && (
-          <Typography variant="body2" color="text.secondary">
-            Facility management coming soon...
-          </Typography>
-        )}
-        {activeTab === 4 && (
-          <Typography variant="body2" color="text.secondary">
-            User management coming soon...
-          </Typography>
-        )}
+        {activeTab === 3 && <FacilityList />}
+        {activeTab === 4 && <UserList />}
       </Box>
     </Box>
   );

@@ -1,4 +1,5 @@
-import { Box, Card, CardContent, Typography, Button, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Box, Card, CardContent, Typography, Button, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid, CircularProgress, Alert } from '@mui/material';
 import PeopleIcon from '@mui/icons-material/People';
 import DomainIcon from '@mui/icons-material/Domain';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -7,13 +8,33 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PendingIcon from '@mui/icons-material/Pending';
 import EventIcon from '@mui/icons-material/Event';
-import BuildIcon from '@mui/icons-material/Build';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useNavigate } from 'react-router-dom';
 import StatCard from '../common/StatCard';
+import { dashboardService } from '../../services/dashboardService';
+import type { AdminStats } from '../../services/dashboardService';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
+  const [stats, setStats] = useState<AdminStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const { stats } = await dashboardService.getStats();
+        setStats(stats as AdminStats);
+      } catch (err) {
+        setError('Failed to load dashboard statistics');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   const quickActions = [
     {
@@ -60,11 +81,21 @@ export default function AdminDashboard() {
     },
   ];
 
-  const pendingApprovals = [
-    { id: 1, user: 'John Smith', type: 'Booking', facility: 'Room B101', date: 'Nov 20, 2025', time: '2:00 PM' },
-    { id: 2, user: 'Sarah Johnson', type: 'Event', facility: 'Auditorium', date: 'Nov 22, 2025', time: '10:00 AM' },
-    { id: 3, user: 'Mike Davis', type: 'Booking', facility: 'Lab C302', date: 'Nov 21, 2025', time: '3:00 PM' },
-  ];
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    );
+  }
 
   return (
     <Box>
@@ -88,17 +119,16 @@ export default function AdminDashboard() {
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Total Users"
-            value="248"
+            value={loading ? "..." : stats?.totalUsers.toString() || "0"}
             icon={<PeopleIcon sx={{ fontSize: 28 }} />}
             color="primary"
             subtitle="Active accounts"
-            trend={{ value: 12, isPositive: true }}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Pending Approvals"
-            value="8"
+            value={loading ? "..." : stats?.pendingApprovals.toString() || "0"}
             icon={<PendingIcon sx={{ fontSize: 28 }} />}
             color="warning"
             subtitle="Requires action"
@@ -107,7 +137,7 @@ export default function AdminDashboard() {
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Active Bookings"
-            value="42"
+            value={loading ? "..." : stats?.activeBookings.toString() || "0"}
             icon={<EventIcon sx={{ fontSize: 28 }} />}
             color="info"
             subtitle="This week"
@@ -116,7 +146,7 @@ export default function AdminDashboard() {
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Facilities"
-            value="15"
+            value={loading ? "..." : stats?.totalFacilities.toString() || "0"}
             icon={<DomainIcon sx={{ fontSize: 28 }} />}
             color="success"
             subtitle="Available resources"
@@ -176,7 +206,61 @@ export default function AdminDashboard() {
         </Grid>
       </Box>
 
-      {/* Pending Approvals Table */}
+      {/* Space Utilization Insights */}
+      <Box sx={{ mb: 5 }}>
+        <Typography variant="h6" gutterBottom sx={{ 
+          fontWeight: 600,
+          mb: 3,
+          fontSize: '1.125rem',
+          lineHeight: 1.4
+        }}>
+          Space Utilization Insights (AI Powered)
+        </Typography>
+        <Grid container spacing={2}>
+          {stats?.utilization?.map((item) => (
+            <Grid size={{ xs: 12, md: 6 }} key={item.id}>
+              <Card>
+                <CardContent>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {item.name}
+                    </Typography>
+                    <Chip 
+                      label={`${item.percentage}% Usage`} 
+                      color={item.percentage > 80 ? 'error' : item.percentage < 20 ? 'warning' : 'success'}
+                      size="small"
+                    />
+                  </Box>
+                  <Box sx={{ width: '100%', bgcolor: 'grey.200', borderRadius: 1, height: 8, mb: 2 }}>
+                    <Box sx={{ 
+                      width: `${item.percentage}%`, 
+                      bgcolor: item.percentage > 80 ? 'error.main' : item.percentage < 20 ? 'warning.main' : 'success.main',
+                      height: '100%', 
+                      borderRadius: 1 
+                    }} />
+                  </Box>
+                  <Typography variant="body2" color="text.secondary">
+                    <strong>Insight:</strong> {item.insight}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+          {(!stats?.utilization || stats.utilization.length === 0) && (
+             <Grid size={{ xs: 12 }}>
+               <Card>
+                 <CardContent>
+                   <Typography variant="body2" color="text.secondary" align="center">
+                     No utilization data available yet.
+                   </Typography>
+                 </CardContent>
+               </Card>
+             </Grid>
+          )}
+        </Grid>
+      </Box>
+
+      {/* Recent Activity Table */}
       <Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
           <Typography variant="h6" sx={{ 
@@ -184,7 +268,7 @@ export default function AdminDashboard() {
             fontSize: '1.125rem',
             lineHeight: 1.4
           }}>
-            Pending Approvals
+            Recent Activity
           </Typography>
           <Button 
             size="small" 
@@ -200,52 +284,57 @@ export default function AdminDashboard() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>User</TableCell>
+                  <TableCell>Activity</TableCell>
                   <TableCell>Type</TableCell>
-                  <TableCell>Facility</TableCell>
-                  <TableCell>Date & Time</TableCell>
+                  <TableCell>Date</TableCell>
                   <TableCell>Status</TableCell>
-                  <TableCell align="right">Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {pendingApprovals.map((approval) => (
-                  <TableRow key={approval.id} hover>
+                {stats?.recentActivity.map((activity) => (
+                  <TableRow key={activity.id} hover>
                     <TableCell>
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                        {approval.user}
+                        {activity.title}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Chip 
-                        label={approval.type} 
+                        label={activity.type} 
                         size="small" 
-                        color={approval.type === 'Booking' ? 'primary' : 'secondary'}
+                        color={activity.type === 'BOOKING' ? 'primary' : 'secondary'}
                         sx={{ fontWeight: 500 }}
                       />
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2">{approval.facility}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2">{approval.date}</Typography>
+                      <Typography variant="body2">
+                        {new Date(activity.date).toLocaleDateString()}
+                      </Typography>
                       <Typography variant="caption" color="text.secondary">
-                        {approval.time}
+                        {new Date(activity.date).toLocaleTimeString()}
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Chip label="Pending" size="small" color="warning" />
-                    </TableCell>
-                    <TableCell align="right">
-                      <Button size="small" variant="outlined" color="success" sx={{ mr: 1 }}>
-                        Approve
-                      </Button>
-                      <Button size="small" variant="outlined" color="error">
-                        Reject
-                      </Button>
+                      <Chip 
+                        label={activity.status} 
+                        size="small" 
+                        color={
+                          activity.status === 'PENDING' ? 'warning' : 
+                          activity.status === 'APPROVED' ? 'success' : 'error'
+                        } 
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
+                {(!stats?.recentActivity || stats.recentActivity.length === 0) && (
+                  <TableRow>
+                    <TableCell colSpan={4} align="center">
+                      <Typography variant="body2" color="text.secondary" sx={{ py: 2 }}>
+                        No recent activity found
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </TableContainer>

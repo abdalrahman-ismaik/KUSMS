@@ -33,12 +33,16 @@ import bookingRoutes from './routes/bookings.js';
 import facilityRoutes from './routes/facilities.js';
 import eventRoutes from './routes/events.js';
 import maintenanceRoutes from './routes/maintenance.js';
+import userRoutes from './routes/users.js';
+import dashboardRoutes from './routes/dashboard.js';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/facilities', facilityRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/maintenance', maintenanceRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 app.get('/api', (req, res) => {
   res.json({
@@ -47,6 +51,7 @@ app.get('/api', (req, res) => {
     endpoints: {
       health: '/health',
       auth: '/api/auth',
+      users: '/api/users',
       bookings: '/api/bookings',
       facilities: '/api/facilities',
       events: '/api/events',
