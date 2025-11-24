@@ -9,77 +9,125 @@ import PeopleIcon from '@mui/icons-material/People';
 import DomainIcon from '@mui/icons-material/Domain';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
 const SIDEBAR_WIDTH = 280;
 
+/**
+ * Props for the Layout component
+ */
 interface LayoutProps {
+  /** The content to be displayed in the main area */
   children: React.ReactNode;
 }
 
+/**
+ * Navigation menu item structure
+ */
+interface MenuItem {
+  /** Display text for the menu item */
+  text: string;
+  /** Icon component to display */
+  icon: React.ReactElement;
+  /** Navigation path */
+  path: string;
+  /** User roles that can access this menu item */
+  roles: string[];
+}
+
+/**
+ * Main layout component that provides the application shell with sidebar navigation.
+ * 
+ * Features:
+ * - Fixed sidebar navigation with role-based menu filtering
+ * - WCAG 2.1 AA compliant with ARIA attributes and keyboard navigation
+ * - Professional visual design with hover and active states
+ * - Skip-to-content link for accessibility
+ * - User profile section with logout functionality
+ * - Performance optimized with React hooks (useMemo, useCallback)
+ * 
+ * @component
+ * @example
+ * ```tsx
+ * <Layout>
+ *   <Dashboard />
+ * </Layout>
+ * ```
+ */
 export default function Layout({ children }: LayoutProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
 
-  const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const handleUserMenuOpen = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-  };
+  }, []);
 
-  const handleUserMenuClose = () => {
+  const handleUserMenuClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, []);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     handleUserMenuClose();
     logout();
     navigate('/login');
-  };
+  }, [logout, navigate, handleUserMenuClose]);
 
   // Base menu items available to all users
-  const baseMenuItems = [
+  const baseMenuItems = useMemo(() => [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard', roles: ['STUDENT', 'FACULTY', 'ADMIN', 'MAINTENANCE'] },
     { text: 'Bookings', icon: <BookIcon />, path: '/bookings', roles: ['STUDENT', 'FACULTY', 'ADMIN'] },
     { text: 'Events', icon: <EventIcon />, path: '/events', roles: ['STUDENT', 'FACULTY', 'ADMIN'] },
     { text: 'Maintenance', icon: <BuildIcon />, path: '/maintenance', roles: ['STUDENT', 'FACULTY', 'ADMIN', 'MAINTENANCE'] },
-  ];
+  ], []);
 
   // Admin-only menu items
-  const adminMenuItems = [
+  const adminMenuItems = useMemo(() => [
     { text: 'Users', icon: <PeopleIcon />, path: '/users', roles: ['ADMIN'] },
     { text: 'Facilities', icon: <DomainIcon />, path: '/facilities', roles: ['ADMIN'] },
-  ];
+  ], []);
 
   // Filter menu items based on user role
-  const menuItems = user
-    ? [...baseMenuItems, ...adminMenuItems].filter(item => item.roles.includes(user.role))
-    : baseMenuItems;
+  const menuItems = useMemo(() => 
+    user
+      ? [...baseMenuItems, ...adminMenuItems].filter(item => item.roles.includes(user.role))
+      : baseMenuItems,
+    [user, baseMenuItems, adminMenuItems]
+  );
 
-  const getRoleColor = (role: string) => {
+  const getRoleColor = useCallback((role: string) => {
     switch (role) {
       case 'ADMIN': return 'error';
       case 'FACULTY': return 'primary';
       case 'MAINTENANCE': return 'warning';
       default: return 'secondary';
     }
-  };
+  }, []);
+
+  const handleNavigate = useCallback((path: string) => {
+    navigate(path);
+  }, [navigate]);
 
   const sidebarContent = (
-    <Box sx={{ 
-      height: '100vh', 
-      display: 'flex', 
-      flexDirection: 'column',
-      bgcolor: '#1e293b',
-      borderRight: '1px solid #334155',
-      position: 'fixed',
-      width: SIDEBAR_WIDTH,
-      top: 0,
-      left: 0,
-      zIndex: 1200
-    }}>
+    <Box 
+      component="nav"
+      role="navigation"
+      aria-label="Main navigation"
+      sx={{ 
+        height: '100vh', 
+        display: 'flex', 
+        flexDirection: 'column',
+        bgcolor: '#1e293b',
+        borderRight: '1px solid #334155',
+        position: 'fixed',
+        width: SIDEBAR_WIDTH,
+        top: 0,
+        left: 0,
+        zIndex: 1200
+      }}>
       {/* Sidebar Header */}
       <Box sx={{ 
         p: 3,
@@ -124,24 +172,38 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* Navigation Menu */}
       <Box sx={{ flex: 1, overflowY: 'auto', py: 3 }}>
-        <Typography variant="overline" sx={{ 
-          px: 3,
-          color: 'text.secondary',
-          fontSize: '0.7rem',
-          fontWeight: 700,
-          letterSpacing: '0.08em',
-          display: 'block',
-          mb: 1.5
-        }}>
+        <Typography 
+          variant="overline" 
+          role="presentation"
+          aria-hidden="true"
+          sx={{ 
+            px: 3,
+            color: 'text.secondary',
+            fontSize: '0.7rem',
+            fontWeight: 700,
+            letterSpacing: '0.08em',
+            display: 'block',
+            mb: 1.5
+          }}>
           MAIN MENU
         </Typography>
-        <List sx={{ px: 2 }}>
+        <List role="menu" sx={{ px: 2 }}>
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <ListItem key={item.text} disablePadding sx={{ mb: 0.75 }}>
                 <ListItemButton 
-                  onClick={() => navigate(item.path)}
+                  role="menuitem"
+                  tabIndex={0}
+                  aria-current={isActive ? 'page' : undefined}
+                  aria-label={`${item.text}${isActive ? ' (current page)' : ''}`}
+                  onClick={() => handleNavigate(item.path)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleNavigate(item.path);
+                    }
+                  }}
                   sx={{
                     borderRadius: '10px',
                     py: 1.25,
@@ -152,6 +214,12 @@ export default function Layout({ children }: LayoutProps) {
                     '&:hover': {
                       bgcolor: isActive ? 'rgba(99, 102, 241, 0.15)' : 'rgba(99, 102, 241, 0.05)',
                       transform: 'translateX(2px)'
+                    },
+                    '&:focus-visible': {
+                      outline: '2px solid',
+                      outlineColor: 'primary.main',
+                      outlineOffset: '2px',
+                      boxShadow: '0 0 0 4px rgba(99, 102, 241, 0.2)',
                     },
                   }}
                 >
@@ -272,6 +340,29 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+      {/* Skip to main content link for keyboard navigation */}
+      <Box
+        component="a"
+        href="#main-content"
+        sx={{
+          position: 'absolute',
+          left: '-9999px',
+          zIndex: 9999,
+          padding: '1rem',
+          backgroundColor: 'primary.main',
+          color: 'primary.contrastText',
+          textDecoration: 'none',
+          borderRadius: '4px',
+          fontWeight: 600,
+          '&:focus': {
+            left: '1rem',
+            top: '1rem',
+          },
+        }}
+      >
+        Skip to main content
+      </Box>
+
       {/* Static Sidebar */}
       {sidebarContent}
 
@@ -399,11 +490,13 @@ export default function Layout({ children }: LayoutProps) {
         </AppBar>
 
         {/* Page Content */}
-        <Box sx={{ 
-          flex: 1,
-          p: 4,
-          bgcolor: 'background.default'
-        }}>
+        <Box 
+          id="main-content"
+          sx={{ 
+            flex: 1,
+            p: 4,
+            bgcolor: 'background.default'
+          }}>
           {children}
         </Box>
       </Box>
