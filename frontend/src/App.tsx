@@ -10,6 +10,8 @@ import BookingPage from './pages/BookingPage';
 import AdminPage from './pages/AdminPage';
 import EventsPage from './pages/EventsPage';
 import MaintenancePage from './pages/MaintenancePage';
+import AnalyticsPage from './pages/AnalyticsPage';
+import SettingsPage from './pages/SettingsPage';
 import theme from './theme';
 import './App.css';
 
@@ -83,6 +85,38 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['ADMIN']}>
                   <AdminPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/users"
+              element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <AdminPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/facilities"
+              element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <AdminPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <AnalyticsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <SettingsPage />
                 </ProtectedRoute>
               }
             />
