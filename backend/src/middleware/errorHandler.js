@@ -1,5 +1,5 @@
 import logger from '../utils/logger.js';
-import { ValidationError, AuthError, NotFoundError } from '../utils/errors.js';
+import { ValidationError, AuthError, ForbiddenError, NotFoundError } from '../utils/errors.js';
 
 /**
  * Global error handler middleware
@@ -12,7 +12,7 @@ export function errorHandler(err, req, res, next) {
     stack: err.stack,
     url: req.url,
     method: req.method,
-    userId: req.user?.userId,
+    userId: req.user?.id,
   });
 
   // Default error
@@ -25,6 +25,9 @@ export function errorHandler(err, req, res, next) {
     message = err.message;
   } else if (err instanceof AuthError) {
     statusCode = 401;
+    message = err.message;
+  } else if (err instanceof ForbiddenError) {
+    statusCode = 403;
     message = err.message;
   } else if (err instanceof NotFoundError) {
     statusCode = 404;

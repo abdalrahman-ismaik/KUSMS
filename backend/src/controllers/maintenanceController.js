@@ -9,7 +9,7 @@ import logger from '../utils/logger.js';
 export async function createRequest(req, res, next) {
   try {
     const { facilityId, description, priority, imageUrl } = req.body;
-    const userId = req.user.userId;
+    const userId = req.user.id;
 
     // Validation
     if (!facilityId || !description) {
@@ -86,7 +86,7 @@ export async function createRequest(req, res, next) {
 export async function getRequests(req, res, next) {
   try {
     const { status, facilityId, priority } = req.query;
-    const userId = req.user.userId;
+    const userId = req.user.id;
     const userRole = req.user.role;
 
     const where = {};
@@ -147,7 +147,7 @@ export async function getRequests(req, res, next) {
 export async function getRequestById(req, res, next) {
   try {
     const { id } = req.params;
-    const userId = req.user.userId;
+    const userId = req.user.id;
     const userRole = req.user.role;
 
     const request = await prisma.maintenanceRequest.findUnique({
@@ -204,10 +204,10 @@ export async function updateRequestStatus(req, res, next) {
   try {
     const { id } = req.params;
     const { status, notes, assignedToId } = req.body;
-    const userId = req.user.userId;
+    const userId = req.user.id;
 
     // Validation
-    const validStatuses = ['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'];
+    const validStatuses = ['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'ON_HOLD'];
     if (!status || !validStatuses.includes(status)) {
       throw new ValidationError('Valid status is required');
     }
@@ -228,8 +228,12 @@ export async function updateRequestStatus(req, res, next) {
     // Build update data
     const updateData = {
       status,
-      ...(assignedToId && { assignedTo: assignedToId }),
     };
+
+    // Add assignedTo if provided
+    if (assignedToId) {
+      updateData.assignedTo = assignedToId;
+    }
 
     // If marking as completed, set completion date
     if (status === 'COMPLETED' && existingRequest.status !== 'COMPLETED') {

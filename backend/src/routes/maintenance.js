@@ -40,7 +40,7 @@ router.post('/', verifyAuth, createRequest);
 router.patch(
   '/:id/status',
   verifyAuth,
-  requireRole(['MAINTENANCE', 'ADMIN']),
+  requireRole('MAINTENANCE', 'ADMIN'),
   updateRequestStatus
 );
 

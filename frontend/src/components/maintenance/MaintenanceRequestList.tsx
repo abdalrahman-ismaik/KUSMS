@@ -54,18 +54,7 @@ const MaintenanceRequestList: React.FC<MaintenanceRequestListProps> = ({
     }
   };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'HIGH':
-        return 'error';
-      case 'MEDIUM':
-        return 'warning';
-      case 'LOW':
-        return 'success';
-      default:
-        return 'default';
-    }
-  };
+
 
   if (loading) {
     return (
@@ -106,18 +95,11 @@ const MaintenanceRequestList: React.FC<MaintenanceRequestListProps> = ({
                   <Typography variant="h6" component="div">
                     {request.facility.name}
                   </Typography>
-                  <Box display="flex" gap={1}>
-                    <Chip
-                      label={request.status.replace('_', ' ')}
-                      color={getStatusColor(request.status) as any} // eslint-disable-line @typescript-eslint/no-explicit-any
-                      size="small"
-                    />
-                    <Chip
-                      label={request.priority}
-                      color={getPriorityColor(request.priority) as any} // eslint-disable-line @typescript-eslint/no-explicit-any
-                      size="small"
-                    />
-                  </Box>
+                  <Chip
+                    label={request.status.replace('_', ' ')}
+                    color={getStatusColor(request.status) as any} // eslint-disable-line @typescript-eslint/no-explicit-any
+                    size="small"
+                  />
                 </Box>
 
                 <Typography variant="body2" color="text.secondary" paragraph>
@@ -132,9 +114,9 @@ const MaintenanceRequestList: React.FC<MaintenanceRequestListProps> = ({
                     <strong>Submitted:</strong>{' '}
                     {new Date(request.createdAt).toLocaleString()}
                   </Typography>
-                  {request.assignedTo && (
+                  {request.assignedStaff && (
                     <Typography variant="caption" color="text.secondary" display="block">
-                      <strong>Assigned to:</strong> {request.assignedTo.name}
+                      <strong>Assigned to:</strong> {request.assignedStaff.name}
                     </Typography>
                   )}
                   {request.completedAt && (
@@ -143,11 +125,7 @@ const MaintenanceRequestList: React.FC<MaintenanceRequestListProps> = ({
                       {new Date(request.completedAt).toLocaleString()}
                     </Typography>
                   )}
-                  {request.notes && (
-                    <Typography variant="caption" color="text.secondary" display="block" mt={1}>
-                      <strong>Notes:</strong> {request.notes}
-                    </Typography>
-                  )}
+
                 </Box>
               </CardContent>
             </Card>

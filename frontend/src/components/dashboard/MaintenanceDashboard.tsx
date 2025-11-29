@@ -4,30 +4,60 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import BuildIcon from '@mui/icons-material/Build';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 import { dashboardService } from '../../services/dashboardService';
+import { getMaintenanceRequests } from '../../services/maintenanceService';
 import type { MaintenanceStats } from '../../services/dashboardService';
+import type { MaintenanceRequest } from '../../services/maintenanceService';
 
 export default function MaintenanceDashboard() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [stats, setStats] = useState<MaintenanceStats | null>(null);
+  const [assignedTasks, setAssignedTasks] = useState<MaintenanceRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchStats = async () => {
+    let isMounted = true;
+
+    const fetchData = async () => {
       try {
+        // Fetch stats
         const data = await dashboardService.getStats();
-        setStats(data.stats as MaintenanceStats);
+        if (isMounted) {
+          setStats(data.stats as MaintenanceStats);
+        }
+        
+        // Fetch assigned maintenance requests (only IN_PROGRESS ones assigned to current user)
+        const requests = await getMaintenanceRequests({ status: 'IN_PROGRESS' });
+        
+        // Filter to only show requests assigned to the current user
+        const userAssignedRequests = requests.filter(
+          (req) => req.assignedTo === user?.id
+        );
+        
+        if (isMounted) {
+          setAssignedTasks(userAssignedRequests);
+        }
       } catch (err) {
-        setError('Failed to load dashboard statistics');
-        console.error(err);
+        if (isMounted) {
+          setError('Failed to load dashboard statistics');
+          console.error(err);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
-    fetchStats();
-  }, []);
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user?.id]);
 
   const statCards = [
     { label: 'Assigned Tasks', value: loading ? '...' : stats?.assignedTasks.toString() || '0', color: '#1976d2' },
@@ -50,55 +80,16 @@ export default function MaintenanceDashboard() {
     );
   }
 
-  // Mock data for assigned tasks
-  const assignedTasks = [
-    {
-      id: 1,
-      title: 'Lab 101 - AC not working',
-      facility: 'Computer Lab 101',
-      priority: 'HIGH',
-      status: 'IN_PROGRESS',
-      createdAt: '2 hours ago',
-    },
-    {
-      id: 2,
-      title: 'Classroom 205 - Projector malfunction',
-      facility: 'Classroom 205',
-      priority: 'MEDIUM',
-      status: 'ASSIGNED',
-      createdAt: '5 hours ago',
-    },
-    {
-      id: 3,
-      title: 'Sports Hall - Broken window',
-      facility: 'Sports Hall',
-      priority: 'HIGH',
-      status: 'ASSIGNED',
-      createdAt: '1 day ago',
-    },
-  ];
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'HIGH':
-        return 'error';
-      case 'MEDIUM':
-        return 'warning';
-      case 'LOW':
-        return 'info';
-      default:
-        return 'default';
-    }
-  };
-
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'IN_PROGRESS':
-        return 'primary';
-      case 'ASSIGNED':
+      case 'PENDING':
         return 'warning';
+      case 'IN_PROGRESS':
+        return 'info';
       case 'COMPLETED':
         return 'success';
+      case 'CANCELLED':
+        return 'error';
       default:
         return 'default';
     }
@@ -226,39 +217,43 @@ export default function MaintenanceDashboard() {
       <Typography variant="h6" gutterBottom>
         Your Assigned Tasks
       </Typography>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        {assignedTasks.map((task) => (
-          <Card
-            key={task.id}
-            sx={{
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              '&:hover': { boxShadow: 3 },
-            }}
-            onClick={() => navigate(`/maintenance/${task.id}`)}
-          >
-            <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-                <Typography variant="h6">{task.title}</Typography>
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                  <Chip label={task.priority} color={getPriorityColor(task.priority)} size="small" />
+      {assignedTasks.length === 0 ? (
+        <Alert severity="info">No tasks currently assigned. All caught up!</Alert>
+      ) : (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {assignedTasks.map((task) => (
+            <Card
+              key={task.id}
+              sx={{
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                '&:hover': { boxShadow: 3 },
+              }}
+              onClick={() => navigate('/maintenance')}
+            >
+              <CardContent>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                  <Typography variant="h6">{task.facility.name} - {task.description.substring(0, 50)}...</Typography>
                   <Chip
                     label={task.status.replace('_', ' ')}
-                    color={getStatusColor(task.status)}
+                    color={getStatusColor(task.status) as any} // eslint-disable-line @typescript-eslint/no-explicit-any
                     size="small"
                   />
                 </Box>
-              </Box>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
-                <strong>Facility:</strong> {task.facility}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Created {task.createdAt}
-              </Typography>
-            </CardContent>
-          </Card>
-        ))}
-      </Box>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                  <strong>Location:</strong> {task.facility.location}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                  <strong>Description:</strong> {task.description}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Created {new Date(task.createdAt).toLocaleString()}
+                </Typography>
+              </CardContent>
+            </Card>
+          ))}
+        </Box>
+      )}
     </Box>
   );
 }

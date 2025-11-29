@@ -186,6 +186,15 @@ async function main() {
   });
 
   if (lectureHall) {
+    // Delete existing maintenance requests for this facility to avoid duplicates
+    await prisma.maintenanceRequest.deleteMany({
+      where: {
+        facilityId: lectureHall.id,
+        description: 'Projector not working properly',
+      },
+    });
+
+    // Create fresh maintenance request
     await prisma.maintenanceRequest.create({
       data: {
         userId: faculty.id,
