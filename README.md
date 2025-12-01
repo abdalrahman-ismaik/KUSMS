@@ -41,17 +41,29 @@ Secure and personalized access for all user types.
 - **Secure Authentication**: JWT-based secure login system.
 - **Personalized Dashboards**: Custom views tailored to each user's specific needs and responsibilities.
 
-## 🤖 AI Modern Functionalities
+## 🤖 AI-Powered Modern Features
 
-KUSMS integrates modern AI capabilities to enhance user experience and operational efficiency:
+KUSMS integrates cutting-edge AI capabilities powered by **Google Gemini 2.5 Pro** to enhance user experience and operational efficiency:
 
-### ✨ AI-Powered Smart Suggestions
+### ✨ AI Booking Suggestions
 
-The system leverages intelligent algorithms to provide personalized recommendations on the Student Dashboard.
+Intelligent, personalized facility booking recommendations for students.
 
-- **Context-Aware Insights**: Analyzes user behavior and campus data to offer relevant suggestions.
-- **Proactive Assistance**: Suggests study times, highlights relevant upcoming events, or recommends available facilities based on usage patterns.
-- **Visual Indicators**: Clearly marked "AI Suggestion" chips help users identify smart recommendations.
+- **Usage Pattern Analysis**: Analyzes individual student booking history to identify preferences and patterns.
+- **Smart Recommendations**: Suggests optimal booking times based on facility popularity and availability.
+- **Facility Insights**: Provides detailed information about favorite facilities, busiest days, and quietest days.
+- **Natural Language**: Generates friendly, encouraging suggestions using Google Gemini AI.
+- **Real-time Generation**: Dynamically creates suggestions as students view their dashboard.
+
+### 🔧 AI Maintenance Summary
+
+Weekly maintenance workload analysis for efficient staff planning.
+
+- **Workload Overview**: Automatically generates concise 3-6 sentence summaries of weekly maintenance activities.
+- **Priority Identification**: Highlights urgent requests requiring immediate attention.
+- **Category Analysis**: Identifies main maintenance categories (electrical, equipment, structural, etc.).
+- **Impact Assessment**: Evaluates how maintenance issues affect campus operations.
+- **Staff Dashboard Integration**: Displays AI summary prominently on maintenance staff dashboard for quick decision-making.
 
 ## 🛠️ Tech Stack
 
@@ -59,6 +71,7 @@ The system leverages intelligent algorithms to provide personalized recommendati
 - **Backend**: Node.js, Express.js
 - **Database**: SQLite (Dev), Prisma ORM
 - **Authentication**: JWT, Bcrypt
+- **AI Integration**: Google Gemini 2.5 Pro API (`@google/generative-ai`)
 
 ## 🚦 Getting Started
 

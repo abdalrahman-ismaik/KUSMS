@@ -2,8 +2,16 @@
 
 **Course**: COSC 336 - Introduction to Software Engineering  
 **Project**: KU Smart Management System (KUSMS)  
-**Submission Date**: November 29, 2025  
+**Submission Date**: December 01, 2025
 **Semester**: Fall 2025
+
+**Prepared by**:
+- Abd Alrahman Ismaik – 100064692
+- Abdullah Saleh Alzaabi – 100061365
+- Habtamu Tenaw – 100064759
+- Maher Abdul Gafoor – 100064788
+
+**Prepared for**: Khalifa University / Department of Computer Science
 
 ---
 

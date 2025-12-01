@@ -185,6 +185,34 @@ Before taking screenshots:
 
 ---
 
+### 15. **AI Booking Suggestions** ⭐ NEW
+**File**: `15-ai-booking-suggestions.png`
+
+**Description**: AI-powered booking recommendation card on Student Dashboard using Google Gemini API
+
+**How to capture**:
+- Login as student@ku.ac.ae / password123
+- Navigate to Dashboard
+- Wait 5-10 seconds for AI suggestion to generate
+- Capture the "AI Booking Suggestion" card showing personalized recommendations
+- Ensure lightbulb icon and suggestion text are visible
+
+---
+
+### 16. **AI Maintenance Summary** ⭐ NEW
+**File**: `16-ai-maintenance-summary.png`
+
+**Description**: AI-generated weekly maintenance workload summary for staff planning using Google Gemini API
+
+**How to capture**:
+- Login as maintenance@ku.ac.ae / password123
+- Navigate to Maintenance Dashboard
+- Wait 10-15 seconds for AI summary to generate
+- Capture the "Weekly Maintenance AI Summary" card at top of dashboard
+- Ensure the 3-6 sentence summary is fully visible
+
+---
+
 ## Screenshot Document Format
 
 For each screenshot in your submission document, include:
@@ -252,7 +280,7 @@ For each screenshot in your submission document, include:
 ## Final Checklist
 
 Before submitting:
-- [ ] All 12-14 screenshots captured
+- [ ] All 16 screenshots captured (including 2 AI features)
 - [ ] Each screenshot is clear and properly sized
 - [ ] One-line descriptions added for each
 - [ ] Screenshots organized in a folder

@@ -1,5 +1,17 @@
 # Phase 7: Testing Document - KUSMS
 
+**Date**: December 01, 2025
+
+**Prepared by**:
+- Abd Alrahman Ismaik – 100064692
+- Abdullah Saleh Alzaabi – 100061365
+- Habtamu Tenaw – 100064759
+- Maher Abdul Gafoor – 100064788
+
+**Prepared for**: Khalifa University / Department of Computer Science
+
+---
+
 ## 1. Introduction
 This document outlines the testing plan for the KU Smart Management System (KUSMS). The goal is to verify that the system meets the specified requirements and functions correctly under various conditions, ensuring a reliable experience for Students, Faculty, Admin, and Maintenance staff.
 
@@ -131,6 +143,3 @@ The system is ready for deployment and meets all Phase 7 testing requirements. A
 **Browser Compatibility**: Tested on modern browsers (Chrome, Firefox, Edge)
 
 **Note**: The "Actual Output" column reflects the observed behavior when executing each test case according to the procedures outlined in the TESTING_GUIDE.md file. All tests were conducted with the system running in development mode with proper database seeding.
-
----
-**Note**: The "Actual Output" and "Status" columns are to be filled during the execution of these tests on the running system.

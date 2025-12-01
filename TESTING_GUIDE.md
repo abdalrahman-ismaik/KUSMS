@@ -141,6 +141,30 @@ Frontend will run on: http://localhost:5173
 6. **Expected**: Status updates successfully
 7. **Verify**: Status badge shows "IN_PROGRESS" in yellow/orange
 
+### Module 5: AI-Powered Features
+
+**TC-13: AI Booking Suggestion Generation (Student)**
+1. Login as Student (student@ku.ac.ae / password123)
+2. Navigate to Dashboard
+3. Wait for the page to fully load (AI suggestion may take 5-10 seconds)
+4. **Expected**: "AI Booking Suggestion" card appears with personalized recommendation
+5. **Verify**: 
+   - Card displays with lightbulb icon
+   - Suggestion includes facility name and details
+   - Recommendation mentions booking patterns or optimal times
+   - Loading message "Generating AI suggestion..." appears briefly during generation
+
+**TC-14: AI Maintenance Summary Generation (Maintenance Staff)**
+1. Login as Maintenance Staff (maintenance@ku.ac.ae / password123)
+2. Navigate to Maintenance Dashboard
+3. Wait for AI summary to generate (may take 10-15 seconds)
+4. **Expected**: "Weekly Maintenance AI Summary" card displays at top of dashboard
+5. **Verify**:
+   - Summary contains 3-6 sentences about maintenance workload
+   - Includes overall volume, main categories, and urgent priorities
+   - Loading message "Waiting for AI response..." shown during generation
+   - Summary is relevant to current maintenance requests
+
 ## Notes for Testing
 - Take screenshots of each successful test
 - Note any deviations from expected behavior
