@@ -1,29 +1,39 @@
-import { useState, useEffect } from 'react';
-import { Box, Card, CardContent, Typography, Button, Chip, Grid, CircularProgress, Alert } from '@mui/material';
-import BookIcon from '@mui/icons-material/Book';
-import EventIcon from '@mui/icons-material/Event';
-import BuildIcon from '@mui/icons-material/Build';
-import PendingIcon from '@mui/icons-material/Pending';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { useNavigate } from 'react-router-dom';
-import StatCard from '../common/StatCard';
-import { dashboardService } from '../../services/dashboardService';
-import type { StudentStats } from '../../services/dashboardService';
+import { useState, useEffect } from "react";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Chip,
+  Grid,
+  CircularProgress,
+  Alert,
+} from "@mui/material";
+import BookIcon from "@mui/icons-material/Book";
+import EventIcon from "@mui/icons-material/Event";
+import BuildIcon from "@mui/icons-material/Build";
+import PendingIcon from "@mui/icons-material/Pending";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useNavigate } from "react-router-dom";
+import StatCard from "../common/StatCard";
+import { dashboardService } from "../../services/dashboardService";
+import type { StudentStats } from "../../services/dashboardService";
+import SuggestionCard from "./SuggestionCard";
 
 export default function StudentDashboard() {
   const navigate = useNavigate();
   const [stats, setStats] = useState<StudentStats | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
+  const [error, setError] = useState("");
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const data = await dashboardService.getStats();
         setStats(data.stats as StudentStats);
       } catch (err) {
-        setError('Failed to load dashboard statistics');
+        setError("Failed to load dashboard statistics");
         console.error(err);
       } finally {
         setLoading(false);
@@ -35,31 +45,38 @@ export default function StudentDashboard() {
 
   const quickActions = [
     {
-      title: 'Book a Facility',
-      description: 'Reserve classrooms, labs, or sports facilities',
+      title: "Book a Facility",
+      description: "Reserve classrooms, labs, or sports facilities",
       icon: <BookIcon sx={{ fontSize: 40 }} />,
-      color: '#1976d2',
-      path: '/bookings',
+      color: "#1976d2",
+      path: "/bookings",
     },
     {
-      title: 'View Events',
-      description: 'Check upcoming university events and deadlines',
+      title: "View Events",
+      description: "Check upcoming university events and deadlines",
       icon: <EventIcon sx={{ fontSize: 40 }} />,
-      color: '#2e7d32',
-      path: '/events',
+      color: "#2e7d32",
+      path: "/events",
     },
     {
-      title: 'Report Issue',
-      description: 'Submit maintenance requests for facilities',
+      title: "Report Issue",
+      description: "Submit maintenance requests for facilities",
       icon: <BuildIcon sx={{ fontSize: 40 }} />,
-      color: '#ed6c02',
-      path: '/maintenance',
+      color: "#ed6c02",
+      path: "/maintenance",
     },
   ];
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "400px",
+        }}
+      >
         <CircularProgress />
       </Box>
     );
@@ -77,15 +94,23 @@ export default function StudentDashboard() {
     <Box>
       {/* Header */}
       <Box sx={{ mb: 5 }}>
-        <Typography variant="h4" gutterBottom sx={{ 
-          fontWeight: 700,
-          fontSize: '1.875rem',
-          lineHeight: 1.2,
-          mb: 1
-        }}>
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
+            fontWeight: 700,
+            fontSize: "1.875rem",
+            lineHeight: 1.2,
+            mb: 1,
+          }}
+        >
           Student Dashboard
         </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ fontSize: '0.9375rem', lineHeight: 1.6 }}>
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ fontSize: "0.9375rem", lineHeight: 1.6 }}
+        >
           Welcome back! Here's an overview of your activity.
         </Typography>
       </Box>
@@ -122,38 +147,20 @@ export default function StudentDashboard() {
       </Grid>
 
       {/* Smart Suggestion (AI Powered) */}
-      {stats?.suggestion && (
-        <Box sx={{ mb: 4 }}>
-          <Card sx={{ 
-            background: 'linear-gradient(45deg, #1976d2 30%, #2196f3 90%)', 
-            color: 'white' 
-          }}>
-            <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box sx={{ bgcolor: 'rgba(255,255,255,0.2)', p: 1.5, borderRadius: '50%' }}>
-                <BookIcon />
-              </Box>
-              <Box>
-                <Typography variant="subtitle1" fontWeight="bold" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  {stats.suggestion.title}
-                  <Chip label="AI Suggestion" size="small" sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white', height: 20, fontSize: '0.65rem' }} />
-                </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                  {stats.suggestion.message}
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Box>
-      )}
+      <SuggestionCard />
 
       {/* Quick Actions */}
       <Box sx={{ mb: 5 }}>
-        <Typography variant="h6" gutterBottom sx={{ 
-          fontWeight: 600,
-          mb: 3,
-          fontSize: '1.125rem',
-          lineHeight: 1.4
-        }}>
+        <Typography
+          variant="h6"
+          gutterBottom
+          sx={{
+            fontWeight: 600,
+            mb: 3,
+            fontSize: "1.125rem",
+            lineHeight: 1.4,
+          }}
+        >
           Quick Actions
         </Typography>
         <Grid container spacing={2}>
@@ -161,36 +168,51 @@ export default function StudentDashboard() {
             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={action.title}>
               <Card
                 sx={{
-                  height: '100%',
-                  cursor: 'pointer',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  '&::before': {
+                  height: "100%",
+                  cursor: "pointer",
+                  position: "relative",
+                  overflow: "hidden",
+                  "&::before": {
                     content: '""',
-                    position: 'absolute',
+                    position: "absolute",
                     top: 0,
                     left: 0,
                     right: 0,
-                    height: '4px',
+                    height: "4px",
                     bgcolor: action.color,
-                  }
+                  },
                 }}
                 onClick={() => navigate(action.path)}
               >
                 <CardContent sx={{ p: 3 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
-                    <Box sx={{ 
-                      p: 1.5, 
-                      borderRadius: 2, 
-                      bgcolor: `${action.color}15`,
-                      color: action.color,
-                      display: 'flex'
-                    }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent: "space-between",
+                      mb: 2,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        p: 1.5,
+                        borderRadius: 2,
+                        bgcolor: `${action.color}15`,
+                        color: action.color,
+                        display: "flex",
+                      }}
+                    >
                       {action.icon}
                     </Box>
-                    <ArrowForwardIcon sx={{ color: 'text.secondary', fontSize: 20 }} />
+                    <ArrowForwardIcon
+                      sx={{ color: "text.secondary", fontSize: 20 }}
+                    />
                   </Box>
-                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+                  <Typography
+                    variant="h6"
+                    gutterBottom
+                    sx={{ fontWeight: 600 }}
+                  >
                     {action.title}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
@@ -205,29 +227,55 @@ export default function StudentDashboard() {
 
       {/* Recent Activity */}
       <Box>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h6" sx={{ 
-            fontWeight: 600,
-            fontSize: '1.125rem',
-            lineHeight: 1.4
-          }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3,
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 600,
+              fontSize: "1.125rem",
+              lineHeight: 1.4,
+            }}
+          >
             Recent Activity
           </Typography>
-          <Button 
-            size="small" 
-            endIcon={<ArrowForwardIcon sx={{ fontSize: '1rem' }} />}
-            sx={{ fontWeight: 600, fontSize: '0.875rem' }}
-            onClick={() => navigate('/bookings')}
+          <Button
+            size="small"
+            endIcon={<ArrowForwardIcon sx={{ fontSize: "1rem" }} />}
+            sx={{ fontWeight: 600, fontSize: "0.875rem" }}
+            onClick={() => navigate("/bookings")}
           >
             View All
           </Button>
         </Box>
         <Card>
           <CardContent sx={{ p: 3 }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, bgcolor: '#0f172a', borderRadius: 2 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Box sx={{ p: 1, borderRadius: 1.5, bgcolor: 'primary.main', color: 'white' }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  p: 2,
+                  bgcolor: "#0f172a",
+                  borderRadius: 2,
+                }}
+              >
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <Box
+                    sx={{
+                      p: 1,
+                      borderRadius: 1.5,
+                      bgcolor: "primary.main",
+                      color: "white",
+                    }}
+                  >
                     <BookIcon />
                   </Box>
                   <Box>
@@ -241,9 +289,25 @@ export default function StudentDashboard() {
                 </Box>
                 <Chip label="Approved" color="success" size="small" />
               </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, bgcolor: '#0f172a', borderRadius: 2 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Box sx={{ p: 1, borderRadius: 1.5, bgcolor: 'warning.main', color: 'white' }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  p: 2,
+                  bgcolor: "#0f172a",
+                  borderRadius: 2,
+                }}
+              >
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <Box
+                    sx={{
+                      p: 1,
+                      borderRadius: 1.5,
+                      bgcolor: "warning.main",
+                      color: "white",
+                    }}
+                  >
                     <PendingIcon />
                   </Box>
                   <Box>

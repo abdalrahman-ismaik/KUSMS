@@ -7,28 +7,36 @@ KUSMS is a comprehensive campus management solution designed to streamline unive
 The system is built around four essential pillars that form the backbone of campus operations:
 
 ### 1. 🏢 Facility Booking Management
+
 A robust reservation system for all campus resources.
+
 - **Browse & Book**: Students and faculty can easily find and book classrooms, labs, and sports facilities.
 - **Conflict Detection**: Automatic detection of scheduling conflicts to prevent double-booking.
 - **Approval Workflow**: Administrative oversight with a streamlined approval process for all requests.
 - **Real-time Availability**: Instant visibility into facility schedules.
 
 ### 2. 📅 Event Scheduling & Calendar
+
 A centralized hub for all campus activities.
+
 - **Master Calendar**: A unified view of all university events, deadlines, and activities.
 - **Event Proposals**: Students and faculty can propose events for administrative review.
 - **Management Tools**: Administrators can approve, reject, or modify event details.
 - **Public Visibility**: Published events are instantly visible to the entire campus community.
 
 ### 3. 🔧 Maintenance Request Tracking
+
 An efficient system for maintaining campus infrastructure.
+
 - **Issue Reporting**: Easy submission of maintenance requests with location and description.
 - **Status Tracking**: Real-time tracking of request status (Pending → In Progress → Completed).
 - **Staff Dashboard**: Dedicated interface for maintenance staff to view and manage their task queue.
 - **Notifications**: Automated updates to requesters when issues are resolved.
 
 ### 4. 🔐 User Authentication & Role Management
+
 Secure and personalized access for all user types.
+
 - **Role-Based Access Control (RBAC)**: Distinct interfaces and permissions for Students, Faculty, Admins, and Maintenance staff.
 - **Secure Authentication**: JWT-based secure login system.
 - **Personalized Dashboards**: Custom views tailored to each user's specific needs and responsibilities.
@@ -38,7 +46,9 @@ Secure and personalized access for all user types.
 KUSMS integrates modern AI capabilities to enhance user experience and operational efficiency:
 
 ### ✨ AI-Powered Smart Suggestions
+
 The system leverages intelligent algorithms to provide personalized recommendations on the Student Dashboard.
+
 - **Context-Aware Insights**: Analyzes user behavior and campus data to offer relevant suggestions.
 - **Proactive Assistance**: Suggests study times, highlights relevant upcoming events, or recommends available facilities based on usage patterns.
 - **Visual Indicators**: Clearly marked "AI Suggestion" chips help users identify smart recommendations.
@@ -53,11 +63,13 @@ The system leverages intelligent algorithms to provide personalized recommendati
 ## 🚦 Getting Started
 
 1.  **Clone the repository**
+
     ```bash
     git clone <repository-url>
     ```
 
 2.  **Install Dependencies**
+
     ```bash
     # Install backend dependencies
     cd backend
@@ -69,6 +81,7 @@ The system leverages intelligent algorithms to provide personalized recommendati
     ```
 
 3.  **Setup Database**
+
     ```bash
     cd backend
     npx prisma generate
@@ -76,7 +89,22 @@ The system leverages intelligent algorithms to provide personalized recommendati
     npx prisma db seed
     ```
 
-4.  **Run the Application**
+4.  **Setup Environment Variables**
+
+    Before running the application, you need to set up your environment variables. The backend requires a `.env` file with secrets like your database connection string and JWT secret.
+
+    1.  Navigate to the `backend` directory:
+        ```bash
+        cd backend
+        ```
+    2.  Create a copy of the example file and name it `.env`:
+        ```bash
+        cp .env.example .env
+        ```
+    3.  Open the new `.env` file and fill in the required values. For the new AI feature, you will need to add your `GEMINI_API_KEY`.
+
+5.  **Run the Application**
+
     ```bash
     # Start Backend (Port 3000)
     cd backend
