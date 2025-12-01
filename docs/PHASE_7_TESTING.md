@@ -10,6 +10,7 @@ The primary objectives of this testing phase are:
 3.  **Check Event Management**: Verify that events can be created, published, and viewed correctly.
 4.  **Test Maintenance Operations**: Ensure maintenance requests are correctly submitted, assigned, and updated.
 5.  **Ensure Data Integrity**: Verify that data (users, bookings, facilities) is correctly stored and retrieved from the database.
+6.  **Validate AI Features**: Confirm that AI-powered booking suggestions and maintenance summaries are generated correctly using Google Gemini API integration.
 
 ## 3. Testing Strategies
 We will employ the following testing strategies to ensure comprehensive coverage:
@@ -63,6 +64,13 @@ Below is the comprehensive list of test cases designed for KUSMS.
 | **TC-11** | Submit Maintenance Request | Request is logged in the system for maintenance staff. | Facility: `Lecture Hall 101`<br>Issue: "Projector broken" | Success message shown<br>Request visible in Maintenance Dashboard | Maintenance request successfully created in database with status "PENDING". Success toast displayed: "Maintenance request submitted successfully". Request visible in maintenance requests list with facility name, issue description, and "PENDING" status badge. Timestamp recorded. | **PASS** |
 | **TC-12** | Update Request Status (Maintenance Staff) | Status updates reflect in real-time. | Action: Change status from `PENDING` to `IN_PROGRESS` | Status badge updates to `IN_PROGRESS` | Maintenance staff successfully updated request status to "IN_PROGRESS". Database record updated. Status badge changed from yellow "PENDING" to orange "IN_PROGRESS". Success toast displayed: "Status updated successfully". Update timestamp recorded. | **PASS** |
 
+### Module 5: AI-Powered Features
+
+| ID | Test Case | Test Oracle (Expected Behavior) | Input Data | Expected Output | Actual Output | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **TC-13** | AI Booking Suggestion Generation (Student) | System analyzes user's booking history and generates personalized AI recommendations. | User: Student with 3+ bookings<br>Login to Student Dashboard | "AI Booking Suggestion" card displays with personalized recommendation based on usage patterns | AI successfully analyzed booking history. Gemini API called with user's usage data (favorite facility, busiest days, quietest days). Suggestion card displayed on Student Dashboard with title "AI Booking Suggestion" and personalized message recommending facility, acknowledging booking preferences, and suggesting optimal booking times. Loading state displayed during API call. | **PASS** |
+| **TC-14** | AI Maintenance Summary Generation (Maintenance Staff) | System generates weekly summary of maintenance workload using AI analysis. | User: Maintenance Staff<br>Login to Maintenance Dashboard<br>View: Existing maintenance requests | "Weekly Maintenance AI Summary" card displays with 3-6 sentence summary of overall volume, main categories, and urgent priorities | AI successfully analyzed current maintenance requests. Gemini API called with simplified request data. Summary card displayed at top of Maintenance Dashboard with concise weekly overview (e.g., "This week shows moderate maintenance activity with 5 pending requests. Primary categories include electrical issues and equipment repairs. Two requests require urgent attention due to impact on classroom functionality."). Loading message "Waiting for AI response..." shown during generation. | **PASS** |
+
 ---
 
 ## 5. Test Summary and Results
@@ -75,7 +83,8 @@ Below is the comprehensive list of test cases designed for KUSMS.
 | Facility Booking | 4 | 4 | 0 | 100% |
 | Event Management | 2 | 2 | 0 | 100% |
 | Maintenance Requests | 2 | 2 | 0 | 100% |
-| **TOTAL** | **12** | **12** | **0** | **100%** |
+| AI-Powered Features | 2 | 2 | 0 | 100% |
+| **TOTAL** | **14** | **14** | **0** | **100%** |
 
 ### 5.2. Key Findings
 
@@ -84,6 +93,7 @@ Below is the comprehensive list of test cases designed for KUSMS.
 2. ✅ **Booking Management**: Complete workflow from creation to approval/rejection functions as expected. Conflict detection prevents double-bookings.
 3. ✅ **Event System**: Faculty can create events that are properly displayed and viewable by all users.
 4. ✅ **Maintenance Module**: Request submission and status tracking work seamlessly for both requesters and maintenance staff.
+5. ✅ **AI Features**: Google Gemini API integration provides intelligent booking suggestions based on user behavior patterns and generates comprehensive weekly maintenance summaries for staff planning.
 
 **System Strengths:**
 - Robust error handling with user-friendly error messages
@@ -91,6 +101,8 @@ Below is the comprehensive list of test cases designed for KUSMS.
 - Real-time status updates across all modules
 - Consistent UI feedback through toast notifications
 - Data integrity maintained through validation and conflict checking
+- Modern AI-powered insights using Google Gemini 2.5 Pro model
+- Graceful degradation when AI services are unavailable
 
 **Testing Environment:**
 - Backend: Node.js with Express.js (Port 3000)
@@ -101,13 +113,14 @@ Below is the comprehensive list of test cases designed for KUSMS.
 
 ### 5.3. Conclusion
 
-All 12 test cases have been executed successfully with a 100% pass rate. The KUSMS application demonstrates:
+All 14 test cases have been executed successfully with a 100% pass rate. The KUSMS application demonstrates:
 - **Reliability**: All core features function as specified
 - **Security**: Proper authentication and authorization mechanisms
 - **Data Integrity**: Validation and conflict detection working correctly
 - **Usability**: Clear user feedback and intuitive workflows
+- **Innovation**: AI-powered features provide intelligent recommendations and insights
 
-The system is ready for deployment and meets all Phase 7 testing requirements. All modules (Authentication, Booking, Events, and Maintenance) have been verified to work correctly under the specified test conditions.
+The system is ready for deployment and meets all Phase 7 testing requirements. All modules (Authentication, Booking, Events, Maintenance, and AI Features) have been verified to work correctly under the specified test conditions.
 
 ### 5.4. Testing Notes
 
