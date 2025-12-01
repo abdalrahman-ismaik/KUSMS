@@ -1,7 +1,8 @@
-import prisma from '../utils/prisma.js';
-import { ValidationError, NotFoundError } from '../utils/errors.js';
-import { sendMaintenanceNotification } from '../utils/notifications.js';
-import logger from '../utils/logger.js';
+import prisma from "../utils/prisma.js";
+import { ValidationError, NotFoundError } from "../utils/errors.js";
+import { sendMaintenanceNotification } from "../utils/notifications.js";
+import logger from "../utils/logger.js";
+import { getAiSummary } from "../utils/maintenanceAiService.js";
 
 /**
  * Create a maintenance request
@@ -13,14 +14,14 @@ export async function createRequest(req, res, next) {
 
     // Validation
     if (!facilityId || !description) {
-      throw new ValidationError('Facility and description are required');
+      throw new ValidationError("Facility and description are required");
     }
 
     // Check for potential duplicates (same facility + similar description)
     const recentRequests = await prisma.maintenanceRequest.findMany({
       where: {
         facilityId,
-        status: { in: ['PENDING', 'IN_PROGRESS'] },
+        status: { in: ["PENDING", "IN_PROGRESS"] },
         createdAt: {
           gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // Last 7 days
         },
@@ -33,9 +34,14 @@ export async function createRequest(req, res, next) {
     });
 
     // Simple duplicate detection (case-insensitive substring match)
-    const possibleDuplicate = recentRequests.find((r) =>
-      r.description.toLowerCase().includes(description.toLowerCase().substring(0, 20)) ||
-      description.toLowerCase().includes(r.description.toLowerCase().substring(0, 20))
+    const possibleDuplicate = recentRequests.find(
+      (r) =>
+        r.description
+          .toLowerCase()
+          .includes(description.toLowerCase().substring(0, 20)) ||
+        description
+          .toLowerCase()
+          .includes(r.description.toLowerCase().substring(0, 20))
     );
 
     // Create the request
@@ -44,7 +50,7 @@ export async function createRequest(req, res, next) {
         facilityId,
         description,
         userId,
-        status: 'PENDING',
+        status: "PENDING",
       },
       include: {
         facility: {
@@ -66,7 +72,7 @@ export async function createRequest(req, res, next) {
     });
 
     // Send notification to maintenance staff
-    await sendMaintenanceNotification('created', maintenanceRequest);
+    await sendMaintenanceNotification("created", maintenanceRequest);
 
     // Return response with duplicate warning if applicable
     res.status(201).json({
@@ -92,7 +98,7 @@ export async function getRequests(req, res, next) {
     const where = {};
 
     // Non-maintenance staff can only see their own requests
-    if (userRole !== 'MAINTENANCE' && userRole !== 'ADMIN') {
+    if (userRole !== "MAINTENANCE" && userRole !== "ADMIN") {
       where.userId = userId;
     }
 
@@ -130,9 +136,7 @@ export async function getRequests(req, res, next) {
           },
         },
       },
-      orderBy: [
-        { createdAt: 'desc' },
-      ],
+      orderBy: [{ createdAt: "desc" }],
     });
 
     res.json(requests);
@@ -179,16 +183,18 @@ export async function getRequestById(req, res, next) {
     });
 
     if (!request) {
-      throw new NotFoundError('Maintenance request not found');
+      throw new NotFoundError("Maintenance request not found");
     }
 
     // Check authorization (users can only view their own requests unless they're maintenance/admin)
     if (
-      userRole !== 'MAINTENANCE' &&
-      userRole !== 'ADMIN' &&
+      userRole !== "MAINTENANCE" &&
+      userRole !== "ADMIN" &&
       request.userId !== userId
     ) {
-      throw new ValidationError('You do not have permission to view this request');
+      throw new ValidationError(
+        "You do not have permission to view this request"
+      );
     }
 
     res.json(request);
@@ -207,9 +213,15 @@ export async function updateRequestStatus(req, res, next) {
     const userId = req.user.id;
 
     // Validation
-    const validStatuses = ['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'ON_HOLD'];
+    const validStatuses = [
+      "PENDING",
+      "IN_PROGRESS",
+      "COMPLETED",
+      "CANCELLED",
+      "ON_HOLD",
+    ];
     if (!status || !validStatuses.includes(status)) {
-      throw new ValidationError('Valid status is required');
+      throw new ValidationError("Valid status is required");
     }
 
     // Check if request exists
@@ -222,7 +234,7 @@ export async function updateRequestStatus(req, res, next) {
     });
 
     if (!existingRequest) {
-      throw new NotFoundError('Maintenance request not found');
+      throw new NotFoundError("Maintenance request not found");
     }
 
     // Build update data
@@ -236,7 +248,7 @@ export async function updateRequestStatus(req, res, next) {
     }
 
     // If marking as completed, set completion date
-    if (status === 'COMPLETED' && existingRequest.status !== 'COMPLETED') {
+    if (status === "COMPLETED" && existingRequest.status !== "COMPLETED") {
       updateData.completedAt = new Date();
     }
 
@@ -271,11 +283,11 @@ export async function updateRequestStatus(req, res, next) {
     });
 
     // Send notification on status change
-    await sendMaintenanceNotification('status_updated', updatedRequest);
+    await sendMaintenanceNotification("status_updated", updatedRequest);
 
     // Send completion notification if applicable
-    if (status === 'COMPLETED' && existingRequest.status !== 'COMPLETED') {
-      await sendMaintenanceNotification('completed', updatedRequest);
+    if (status === "COMPLETED" && existingRequest.status !== "COMPLETED") {
+      await sendMaintenanceNotification("completed", updatedRequest);
     }
 
     res.json(updatedRequest);
@@ -296,23 +308,62 @@ export async function deleteRequest(req, res, next) {
     });
 
     if (!request) {
-      throw new NotFoundError('Maintenance request not found');
+      throw new NotFoundError("Maintenance request not found");
     }
 
     await prisma.maintenanceRequest.delete({
       where: { id },
     });
 
-    res.json({ message: 'Maintenance request deleted successfully' });
+    res.json({ message: "Maintenance request deleted successfully" });
   } catch (error) {
     next(error);
   }
 }
 
+/**
+ * Get AI summary for the week's maintenance requests
+ */
+export async function getAiSummaryForWeek(req, res, next) {
+  try {
+    // 1. Fetch requests from the last 7 days
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const requests = await prisma.maintenanceRequest.findMany({
+      where: {
+        createdAt: {
+          gte: sevenDaysAgo,
+        },
+      },
+      include: {
+        facility: true,
+        user: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    if (requests.length === 0) {
+      return res.json({
+        aiSummary: "No maintenance requests in the last 7 days.",
+      });
+    }
+
+    // 2. Get the AI summary
+    const { aiSummary } = await getAiSummary(requests);
+
+    // 3. Return the summary
+    res.json({ aiSummary });
+  } catch (error) {
+    logger.error("Error getting AI summary:", error);
+    next(error);
+  }
+}
 export default {
   createRequest,
   getRequests,
   getRequestById,
   updateRequestStatus,
   deleteRequest,
+  getAiSummaryForWeek,
 };

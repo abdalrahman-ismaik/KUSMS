@@ -1,4 +1,4 @@
-import api from './api';
+import api from "./api";
 
 export interface MaintenanceRequest {
   id: string;
@@ -9,7 +9,7 @@ export interface MaintenanceRequest {
     location: string;
   };
   description: string;
-  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+  status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
   userId: string;
   user: {
     id: string;
@@ -35,7 +35,7 @@ export interface CreateMaintenanceRequestData {
 }
 
 export interface UpdateMaintenanceStatusData {
-  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+  status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
   assignedToId?: string;
 }
 
@@ -45,7 +45,7 @@ export const getMaintenanceRequests = async (params?: {
   facilityId?: string;
   priority?: string;
 }): Promise<MaintenanceRequest[]> => {
-  const response = await api.get('/maintenance', { params });
+  const response = await api.get("/maintenance", { params });
   return response.data;
 };
 
@@ -61,7 +61,7 @@ export const getMaintenanceRequestById = async (
 export const createMaintenanceRequest = async (
   data: CreateMaintenanceRequestData
 ): Promise<MaintenanceRequest> => {
-  const response = await api.post('/maintenance', data);
+  const response = await api.post("/maintenance", data);
   return response.data;
 };
 
@@ -77,4 +77,10 @@ export const updateMaintenanceStatus = async (
 // Delete maintenance request (admin only)
 export const deleteMaintenanceRequest = async (id: string): Promise<void> => {
   await api.delete(`/maintenance/${id}`);
+};
+
+// Get AI summary for the week's maintenance requests
+export const getAiSummary = async (): Promise<{ aiSummary: string }> => {
+  const response = await api.get("/maintenance/summary");
+  return response.data;
 };
